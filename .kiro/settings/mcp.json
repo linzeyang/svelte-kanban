@@ -1,0 +1,41 @@
+{
+	"mcpServers": {
+		"fetch": {
+			"command": "uv",
+			"args": [
+			    "tool",
+				"run",
+				"mcp-server-fetch",
+				"--user-agent=\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36\"",
+				"--ignore-robots-txt"
+			],
+			"env": {},
+			"disabled": false,
+			"autoApprove": ["fetch"]
+		},
+		"sequential-thinking": {
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+			"disabled": false,
+			"autoApprove": ["sequentialthinking"]
+		},
+		"svelte-llm": {
+			"command": "npx",
+			"args": ["-y", "mcp-remote", "https://svelte-llm.stanislav.garden/mcp/mcp"],
+			"disabled": false,
+			"autoApprove": ["list_sections", "get_documentation"]
+		},
+		"playwright": {
+			"command": "npx",
+			"args": ["-y", "@playwright/mcp@latest"],
+			"disabled": false,
+			"autoApprove": []
+		},
+		"memory": {
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-memory"],
+			"disabled": false,
+			"autoApprove": []
+		}
+	}
+}
