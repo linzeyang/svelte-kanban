@@ -1,6 +1,7 @@
 # Coding Standards and Best Practices
 
 ## Code Style and Formatting
+
 - Use ESLint and Prettier configurations already set up in the project
 - Follow consistent naming conventions:
   - Components: PascalCase (e.g., `KanbanBoard.svelte`)
@@ -9,6 +10,7 @@
   - CSS classes: kebab-case following TailwindCSS conventions
 
 ## TypeScript Guidelines
+
 - Define interfaces for all data structures
 - Use proper typing for component props
 - Implement type guards for API responses
@@ -16,6 +18,7 @@
 - Export types from dedicated type files
 
 ## Error Handling Standards
+
 - Implement try-catch blocks for async operations
 - Provide user-friendly error messages
 - Log errors appropriately for debugging
@@ -23,6 +26,7 @@
 - Validate user inputs before processing
 
 ## Performance Considerations
+
 - Keep drag operations under 300ms response time
 - Optimize animations for 60fps performance
 - Use proper key attributes for list rendering

@@ -11,6 +11,7 @@
 ## Key Design Tokens
 
 ### Color Palette (OKLCH)
+
 - **Neon Blue**: `oklch(0.7 0.25 240)` - Primary accent
 - **Neon Purple**: `oklch(0.65 0.3 300)` - Secondary accent
 - **Neon Green**: `oklch(0.8 0.25 120)` - Success states
@@ -18,10 +19,12 @@
 - **Text Primary**: `oklch(0.98 0 0)` - High contrast text
 
 ### Typography
+
 - **Display Font**: Inter, system-ui, sans-serif
 - **Monospace Font**: JetBrains Mono, Consolas, monospace
 
 ### Animation Easing
+
 - **Fluid**: `cubic-bezier(0.3, 0, 0, 1)` - Smooth transitions
 - **Snappy**: `cubic-bezier(0.2, 0, 0, 1)` - Quick interactions
 - **Bounce**: `cubic-bezier(0.68, -0.55, 0.265, 1.55)` - Playful effects
@@ -29,12 +32,14 @@
 ## Component Design Patterns
 
 ### Kanban Board Layout
+
 - Four columns: "To Do", "In Progress", "Testing", "Done"
 - Neon borders around columns with status-specific colors
 - Gradient backgrounds for visual hierarchy
 - Smooth hover effects and transitions (< 300ms)
 
 ### Key UI Components
+
 - **Task Cards**: Gradient backgrounds with neon borders, 3D hover effects
 - **Modals**: Glass effect with backdrop blur and enter animations
 - **Form Elements**: Dark inputs with neon focus states
@@ -42,6 +47,7 @@
 - **AI Indicators**: Pulsing animations for AI-generated content
 
 ### Modern CSS Features
+
 - **Container Queries**: `@container` for responsive layouts
 - **3D Transforms**: `perspective-*` and `rotate-x-*` utilities
 - **Text Shadows**: `text-shadow-*` for better readability
