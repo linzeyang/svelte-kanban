@@ -293,9 +293,9 @@ export default defineConfig({
 <div
 	class="task-card {statusColor} perspective-1000 hover:kanban-glow drag:opacity-75
          drag:rotate-2 drag:cursor-grabbing
-         ease-fluid @container cursor-grab
-         rounded-sm p-4 transition-all
-         duration-300 transform-3d hover:scale-105
+         @container cursor-grab rounded-sm
+         p-4 transition-all duration-300
+         ease-fluid transform-3d hover:scale-105
          hover:rotate-x-6"
 	draggable="true"
 	ondragstart={handleDragStart}
@@ -306,8 +306,8 @@ export default defineConfig({
 	<!-- Task header -->
 	<div class="mb-3 flex items-start justify-between">
 		<h3
-			class="text-text-primary text-shadow-neon-blue/20
-               font-semibold text-shadow-xs
+			class="font-semibold text-text-primary
+               text-shadow-neon-blue/20 text-shadow-xs
                @sm:text-lg"
 		>
 			{task.title}
@@ -319,14 +319,14 @@ export default defineConfig({
 			</span>
 
 			{#if task.aiGenerated}
-				<div class="bg-neon-purple ai-pulse h-2 w-2 rounded-full" title="AI Generated"></div>
+				<div class="h-2 w-2 ai-pulse rounded-full bg-neon-purple" title="AI Generated"></div>
 			{/if}
 		</div>
 	</div>
 
 	<!-- Task description -->
 	<p
-		class="text-text-secondary mb-4 text-sm wrap-anywhere
+		class="mb-4 text-sm wrap-anywhere text-text-secondary
             @sm:text-base"
 	>
 		{task.description}
@@ -334,7 +334,7 @@ export default defineConfig({
 
 	<!-- Task actions -->
 	<div class="flex items-center justify-between">
-		<div class="text-text-muted flex items-center space-x-2 text-xs">
+		<div class="flex items-center space-x-2 text-xs text-text-muted">
 			<time datetime={task.createdAt.toISOString()}>
 				{task.createdAt.toLocaleDateString()}
 			</time>
@@ -345,9 +345,9 @@ export default defineConfig({
 				<button
 					onclick={optimizeStory}
 					disabled={isOptimizing}
-					class="bg-neon-purple/20 text-neon-purple hover:bg-neon-purple/30 rounded px-2 py-1
-                 text-xs transition-all
-                 duration-200 not-disabled:hover:scale-105
+					class="rounded bg-neon-purple/20 px-2 py-1 text-xs text-neon-purple
+                 transition-all duration-200
+                 hover:bg-neon-purple/30 not-disabled:hover:scale-105
                  disabled:cursor-not-allowed disabled:opacity-50"
 				>
 					{isOptimizing ? 'Optimizing...' : 'Optimize'}
@@ -356,7 +356,7 @@ export default defineConfig({
 
 			<button
 				onclick={() => onDelete?.(task.id)}
-				class="text-text-muted p-1 transition-all
+				class="p-1 text-text-muted transition-all
                duration-200 hover:scale-110 hover:text-red-400"
 				aria-label="Delete task"
 			>
