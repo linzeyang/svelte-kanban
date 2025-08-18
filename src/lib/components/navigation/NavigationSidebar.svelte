@@ -175,7 +175,7 @@
 <!-- Main sidebar -->
 <nav
 	bind:this={sidebarElement}
-	class={sidebarClasses}
+	class={sidebarClasses()}
 	aria-label="Main navigation"
 	data-testid="navigation-sidebar"
 >

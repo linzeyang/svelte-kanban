@@ -69,3 +69,120 @@ test('sidebar toggle functionality', async ({ page }) => {
 	await expect(navItem).toBeVisible();
 	await expect(navItem.getByText('Kanban')).toBeVisible();
 });
+
+test('desktop layout has sidebar and main content side-by-side', async ({ page }) => {
+	await page.setViewportSize({ width: 1200, height: 800 });
+	await page.goto('/');
+
+	// Get the app shell and main content elements
+	const appShell = page.locator('[data-testid="app-shell"]');
+	const sidebar = page.getByTestId('navigation-sidebar');
+	const mainContent = page.locator('.main-content-area');
+
+	// Check that all elements are visible
+	await expect(appShell).toBeVisible();
+	await expect(sidebar).toBeVisible();
+	await expect(mainContent).toBeVisible();
+
+	// Get bounding boxes to verify layout positioning
+	const appBox = await appShell.boundingBox();
+	const sidebarBox = await sidebar.boundingBox();
+	const mainBox = await mainContent.boundingBox();
+
+	// Verify sidebar and main content are positioned side-by-side
+	// The key insight: main content should be to the right of sidebar
+	const sidebarRightEdge = sidebarBox!.x + sidebarBox!.width;
+	const mainStartsAfterSidebar = mainBox!.x >= sidebarRightEdge - 10;
+	const combinedWidth = sidebarBox!.width + mainBox!.width;
+
+	expect(mainStartsAfterSidebar).toBe(true);
+	expect(combinedWidth).toBeCloseTo(appBox!.width, 50); // Allow some tolerance
+
+	// Verify they are roughly at the same vertical position (same row)
+	expect(Math.abs(sidebarBox!.y - mainBox!.y)).toBeLessThan(100);
+});
+
+test('mobile layout has sidebar hidden and main content full width', async ({ page }) => {
+	await page.setViewportSize({ width: 375, height: 800 });
+	await page.goto('/');
+
+	const appShell = page.locator('[data-testid="app-shell"]');
+	const sidebar = page.getByTestId('navigation-sidebar');
+	const mainContent = page.locator('.main-content-area');
+
+	// Check that main content is visible
+	await expect(mainContent).toBeVisible();
+
+	// Get bounding boxes to verify mobile layout
+	const appBox = await appShell.boundingBox();
+	const mainBox = await mainContent.boundingBox();
+
+	// Main content should be full width on mobile
+	expect(mainBox?.width).toBeCloseTo(appBox!.width, 20);
+	expect(mainBox?.x).toBeCloseTo(0, 20);
+
+	// Sidebar should be positioned off-screen initially (mobile overlay behavior)
+	const sidebarBox = await sidebar.boundingBox();
+	expect(sidebarBox?.x).toBeLessThan(0); // Off-screen to the left
+});
+
+test('mobile responsive behavior works correctly', async ({ page }) => {
+	await page.setViewportSize({ width: 375, height: 800 });
+	await page.goto('/');
+
+	const appShell = page.locator('[data-testid="app-shell"]');
+	const sidebar = page.getByTestId('navigation-sidebar');
+	const mainContent = page.locator('.main-content-area');
+
+	// Check that elements are visible
+	await expect(appShell).toBeVisible();
+	await expect(mainContent).toBeVisible();
+
+	// Verify mobile responsive behavior
+	const appBox = await appShell.boundingBox();
+	const mainBox = await mainContent.boundingBox();
+	const sidebarBox = await sidebar.boundingBox();
+
+	// Main content should occupy full width
+	expect(mainBox?.width).toBeCloseTo(appBox!.width, 20);
+
+	// Sidebar should be positioned off-screen for mobile overlay
+	expect(sidebarBox?.x).toBeLessThan(0);
+
+	// The key test: verify the layout is responsive by checking
+	// that the app-shell has the correct mobile data attribute
+	const isMobile = await appShell.getAttribute('data-mobile');
+	expect(isMobile).toBe('true');
+});
+
+test('visual regression - desktop layout', async ({ page }) => {
+	await page.setViewportSize({ width: 1200, height: 800 });
+	await page.goto('/');
+
+	// Wait for layout to stabilize
+	await page.waitForLoadState('networkidle');
+	await page.waitForTimeout(500); // Additional wait for layout animations
+
+	// Take screenshot of the entire page for visual regression
+	await expect(page).toHaveScreenshot('desktop-layout.png', {
+		maxDiffPixels: 500, // Allow larger differences for dynamic content
+		animations: 'disabled', // Ensure consistent state
+		threshold: 0.2 // Allow 20% pixel difference
+	});
+});
+
+test('visual regression - mobile layout', async ({ page }) => {
+	await page.setViewportSize({ width: 375, height: 800 });
+	await page.goto('/');
+
+	// Wait for layout to stabilize
+	await page.waitForLoadState('networkidle');
+	await page.waitForTimeout(500); // Additional wait for layout animations
+
+	// Take screenshot of the entire page for visual regression
+	await expect(page).toHaveScreenshot('mobile-layout.png', {
+		maxDiffPixels: 500, // Allow larger differences for dynamic content
+		animations: 'disabled', // Ensure consistent state
+		threshold: 0.2 // Allow 20% pixel difference
+	});
+});
