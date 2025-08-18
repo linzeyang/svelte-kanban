@@ -36,7 +36,8 @@
   - Write integration tests for layout responsiveness
   - _Requirements: 2.4, 4.1, 4.2, 4.3, 4.4, 7.1, 7.5_
 
-- [ ] 6. Create kanban state management and column structure
+- [x] 6. Create kanban state management and column structure
+  - Refer to the documentation by using 'svelte-llm' MCP server before actual implementation
   - Implement KanbanStore class with column definitions and state management
   - Define four-column structure with status-specific styling configuration
   - Add methods for future task management integration
