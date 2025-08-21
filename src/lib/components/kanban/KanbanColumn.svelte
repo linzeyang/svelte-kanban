@@ -42,7 +42,7 @@ Usage:
 </script>
 
 <div
-	class="kanban-column {statusClass} slide-in-up"
+	class="kanban-column {statusClass} column-hover"
 	role="region"
 	aria-label="{column.title} column with {taskCount} tasks"
 	data-testid="column-{column.id}"
@@ -130,7 +130,7 @@ Usage:
 			<!-- Task Cards Placeholder -->
 			{#each column.tasks as task, index (task.id)}
 				<div
-					class="task-card hover-lift stagger-in hover-glow"
+					class="task-card interactive-hover hover-glow-smooth hover-lift-smooth"
 					style="animation-delay: {index * 50}ms"
 					role="listitem"
 					aria-label="Task: {task.title}"

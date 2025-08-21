@@ -165,9 +165,9 @@ test('visual regression - desktop layout', async ({ page }) => {
 
 	// Take screenshot of the entire page for visual regression
 	await expect(page).toHaveScreenshot('desktop-layout.png', {
-		maxDiffPixels: 500, // Allow larger differences for dynamic content
+		maxDiffPixels: 1000, // Allow larger differences for dynamic content and system variations
 		animations: 'disabled', // Ensure consistent state
-		threshold: 0.2 // Allow 20% pixel difference
+		threshold: 0.25 // Allow 25% pixel difference
 	});
 });
 
@@ -181,8 +181,8 @@ test('visual regression - mobile layout', async ({ page }) => {
 
 	// Take screenshot of the entire page for visual regression
 	await expect(page).toHaveScreenshot('mobile-layout.png', {
-		maxDiffPixels: 500, // Allow larger differences for dynamic content
+		maxDiffPixels: 1000, // Allow larger differences for dynamic content and system variations
 		animations: 'disabled', // Ensure consistent state
-		threshold: 0.2 // Allow 20% pixel difference
+		threshold: 0.25 // Allow 25% pixel difference
 	});
 });

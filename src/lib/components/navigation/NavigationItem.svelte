@@ -14,14 +14,15 @@
 	let isHovered = $state(false);
 	let isFocused = $state(false);
 
-	// Derived classes for styling
+	// Enhanced derived classes for styling with smooth animations
 	let itemClasses = $derived(() => {
 		let classes =
-			'nav-item group relative flex items-center w-full px-3 py-2.5 rounded-lg transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2';
+			'nav-item nav-hover group relative flex items-center w-full px-3 py-2.5 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-neon-blue/50';
 
-		// Active state styling
+		// Active state styling with enhanced effects
 		if (item.active) {
-			classes += ' nav-item-active bg-blue-500/20 border-l-4 border-blue-400 shadow-lg';
+			classes +=
+				' nav-item-active nav-tab-switch bg-blue-500/20 border-l-4 border-blue-400 shadow-lg';
 		} else {
 			classes += ' hover:bg-blue-500/10 hover:border-l-2 hover:border-blue-400/50';
 		}
@@ -35,6 +36,9 @@
 		if (collapsed) {
 			classes += ' justify-center px-2';
 		}
+
+		// Performance optimization classes
+		classes += ' will-change-transform';
 
 		return classes;
 	});
@@ -144,12 +148,15 @@
 </button>
 
 <style>
-	/* Custom utilities for navigation items */
+	/* Enhanced navigation item animations with performance optimization */
 	.nav-item {
 		position: relative;
 		overflow: hidden;
+		transform: translateZ(0); /* Force GPU acceleration */
+		backface-visibility: hidden;
 	}
 
+	/* Shimmer effect on hover */
 	.nav-item::before {
 		content: '';
 		position: absolute;
@@ -160,30 +167,54 @@
 		background: linear-gradient(
 			90deg,
 			transparent,
-			color-mix(in oklch, var(--color-neon-blue) 10%, transparent),
+			color-mix(in oklch, var(--color-neon-blue) 15%, transparent),
 			transparent
 		);
-		transition: left 0.5s ease-fluid;
+		transition: left 0.4s var(--ease-fluid);
+		will-change: transform;
 	}
 
 	.nav-item:hover::before {
 		left: 100%;
 	}
 
+	/* Enhanced active state with smooth transitions */
 	.nav-item-active {
+		background: linear-gradient(
+			135deg,
+			color-mix(in oklch, var(--color-neon-blue) 20%, transparent),
+			color-mix(in oklch, var(--color-neon-purple) 15%, transparent)
+		);
 		box-shadow:
-			0 0 20px color-mix(in oklch, var(--color-neon-blue) 30%, transparent),
-			inset 0 1px 0 color-mix(in oklch, var(--color-neon-blue) 20%, transparent);
+			0 0 25px color-mix(in oklch, var(--color-neon-blue) 35%, transparent),
+			inset 0 1px 0 color-mix(in oklch, var(--color-neon-blue) 25%, transparent),
+			0 4px 15px color-mix(in oklch, var(--color-neon-blue) 20%, transparent);
+		border-left: 3px solid var(--color-neon-blue);
+		transform: translateX(2px) translateZ(0);
 	}
 
-	/* Focus ring enhancement */
+	/* Smooth hover state transitions */
+	.nav-item:hover:not(.nav-item-active) {
+		background: color-mix(in oklch, var(--color-neon-blue) 8%, transparent);
+		transform: translateX(3px) translateZ(0);
+		box-shadow: 0 0 15px color-mix(in oklch, var(--color-neon-blue) 20%, transparent);
+	}
+
+	/* Enhanced focus ring */
 	.nav-item:focus-visible {
 		outline: 2px solid var(--color-neon-blue);
 		outline-offset: 2px;
+		box-shadow:
+			0 0 0 4px color-mix(in oklch, var(--color-neon-blue) 20%, transparent),
+			0 0 20px color-mix(in oklch, var(--color-neon-blue) 30%, transparent);
 	}
 
-	/* Smooth transitions for all interactive states */
-	.nav-item * {
-		transition: all 200ms var(--ease-fluid);
+	/* Performance-optimized transitions */
+	.nav-item {
+		transition:
+			transform 180ms var(--ease-fluid),
+			background-color 180ms var(--ease-fluid),
+			box-shadow 180ms var(--ease-fluid);
+		will-change: transform, background-color, box-shadow;
 	}
 </style>

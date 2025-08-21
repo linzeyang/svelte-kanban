@@ -2,6 +2,7 @@
 <script lang="ts">
 	import { navigationStore } from '$lib/stores/navigation.svelte';
 	import NavigationItem from './NavigationItem.svelte';
+	import { animationManager } from '$lib/utils/animation-manager';
 
 	interface Props {
 		/** Override collapsed state (for external control) */
@@ -56,12 +57,24 @@
 		return classes;
 	});
 
-	// Handle navigation item activation
+	// Handle navigation item activation with smooth animation
 	function handleItemActivate(itemId: string) {
+		const previousActiveElement = sidebarElement?.querySelector('.nav-item-active') as HTMLElement;
 		const success = navigationStore.setActiveItem(itemId);
-		if (success && isMobile) {
-			// Close mobile menu after navigation
-			isMobileMenuOpen = false;
+
+		if (success) {
+			const newActiveElement = sidebarElement?.querySelector(
+				`[data-testid="nav-item-${itemId}"]`
+			) as HTMLElement;
+
+			if (newActiveElement && previousActiveElement !== newActiveElement) {
+				animationManager.triggerTabSwitchAnimation(newActiveElement, previousActiveElement);
+			}
+
+			if (isMobile) {
+				// Close mobile menu after navigation
+				isMobileMenuOpen = false;
+			}
 		}
 	}
 
@@ -306,18 +319,24 @@
 		background: color-mix(in oklch, var(--color-neon-blue) 50%, transparent);
 	}
 
-	/* Smooth entrance animation */
+	/* Enhanced entrance animation with performance optimization */
 	.navigation-sidebar {
-		animation: slide-in-left 300ms var(--ease-fluid);
+		animation: sidebar-slide-in 400ms var(--ease-fluid) both;
+		will-change: transform, opacity;
 	}
 
-	@keyframes slide-in-left {
+	/* Remove will-change after animation completes */
+	.navigation-sidebar.animation-complete {
+		will-change: auto;
+	}
+
+	@keyframes sidebar-slide-in {
 		from {
-			transform: translateX(-100%);
+			transform: translateX(-100%) translateZ(0);
 			opacity: 0;
 		}
 		to {
-			transform: translateX(0);
+			transform: translateX(0) translateZ(0);
 			opacity: 1;
 		}
 	}

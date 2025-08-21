@@ -381,13 +381,21 @@ describe('KanbanBoard', () => {
 			target: document.body
 		});
 
-		// Check that each column wrapper has the correct stagger delay class
+		// Check that each column wrapper has the correct stagger delay via CSS custom property
 		const columnWrappers = document.body.querySelectorAll('[data-testid^="column-wrapper-"]');
 
-		expect(columnWrappers[0]?.classList.contains('stagger-delay-1')).toBe(true);
-		expect(columnWrappers[1]?.classList.contains('stagger-delay-2')).toBe(true);
-		expect(columnWrappers[2]?.classList.contains('stagger-delay-3')).toBe(true);
-		expect(columnWrappers[3]?.classList.contains('stagger-delay-4')).toBe(true);
+		expect((columnWrappers[0] as HTMLElement)?.style.getPropertyValue('--animation-delay')).toBe(
+			'0ms'
+		);
+		expect((columnWrappers[1] as HTMLElement)?.style.getPropertyValue('--animation-delay')).toBe(
+			'100ms'
+		);
+		expect((columnWrappers[2] as HTMLElement)?.style.getPropertyValue('--animation-delay')).toBe(
+			'200ms'
+		);
+		expect((columnWrappers[3] as HTMLElement)?.style.getPropertyValue('--animation-delay')).toBe(
+			'300ms'
+		);
 
 		unmount(component);
 	});

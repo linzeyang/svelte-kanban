@@ -137,15 +137,19 @@ Usage:
 			</div>
 		</header>
 
-		<!-- Kanban Columns Grid -->
+		<!-- Kanban Columns Grid with Enhanced Animations -->
 		<div
-			class="kanban-board slide-in-up"
+			class="kanban-board"
 			role="region"
 			aria-label="Kanban columns"
 			data-testid="kanban-columns"
 		>
 			{#each columnsWithTasks as column, index (column.id)}
-				<div class="stagger-in stagger-delay-{index + 1}" data-testid="column-wrapper-{column.id}">
+				<div
+					class="column-wrapper"
+					data-testid="column-wrapper-{column.id}"
+					style="--animation-delay: {index * 100}ms"
+				>
 					<KanbanColumn {column} />
 				</div>
 			{/each}
@@ -261,35 +265,32 @@ Usage:
 		}
 	}
 
-	/* Progress bar smooth animation */
-	.progress-bar {
-		transition: width 0.5s ease-out;
+	/* Enhanced column wrapper animations */
+	.column-wrapper {
+		opacity: 0;
+		transform: translateY(30px) translateZ(0);
+		animation: column-entrance 350ms var(--ease-fluid) both;
+		animation-delay: var(--animation-delay);
+		will-change: transform, opacity;
 	}
 
-	/* Stagger animation delays for columns */
-	.stagger-delay-1 {
-		animation-delay: 0ms;
-	}
-	.stagger-delay-2 {
-		animation-delay: 100ms;
-	}
-	.stagger-delay-3 {
-		animation-delay: 200ms;
-	}
-	.stagger-delay-4 {
-		animation-delay: 300ms;
+	/* Column entrance animation */
+	@keyframes column-entrance {
+		from {
+			opacity: 0;
+			transform: translateY(30px) translateZ(0);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0) translateZ(0);
+		}
 	}
 
 	/* Enhanced accessibility for reduced motion */
 	@media (prefers-reduced-motion: reduce) {
 		.slide-in-up,
-		.slide-in-down,
-		.stagger-in {
+		.slide-in-down {
 			animation: none;
-		}
-
-		.progress-bar {
-			transition: none;
 		}
 	}
 

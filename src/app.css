@@ -311,36 +311,43 @@
 
 /* Animation Keyframes and Utilities */
 
-/* Entrance Animations */
+/* Entrance Animations with Performance Optimization */
 @utility slide-in-left {
-	animation: slide-in-left 300ms var(--ease-fluid);
+	animation: slide-in-left 300ms var(--ease-fluid) both;
+	will-change: transform, opacity;
 }
 
 @utility slide-in-right {
-	animation: slide-in-right 300ms var(--ease-fluid);
+	animation: slide-in-right 300ms var(--ease-fluid) both;
+	will-change: transform, opacity;
 }
 
 @utility slide-in-up {
-	animation: slide-in-up 300ms var(--ease-fluid);
+	animation: slide-in-up 300ms var(--ease-fluid) both;
+	will-change: transform, opacity;
 }
 
 @utility slide-in-down {
-	animation: slide-in-down 300ms var(--ease-fluid);
+	animation: slide-in-down 300ms var(--ease-fluid) both;
+	will-change: transform, opacity;
 }
 
 @utility fade-in {
-	animation: fade-in 200ms var(--ease-fluid);
+	animation: fade-in 200ms var(--ease-fluid) both;
+	will-change: opacity;
 }
 
 @utility scale-in {
-	animation: scale-in 250ms var(--ease-bounce);
+	animation: scale-in 250ms var(--ease-bounce) both;
+	will-change: transform, opacity;
 }
 
 @utility stagger-in {
-	animation: slide-in-up 400ms var(--ease-fluid);
+	animation: slide-in-up 400ms var(--ease-fluid) both;
+	will-change: transform, opacity;
 }
 
-/* Staggered entrance for multiple elements */
+/* Enhanced Staggered Entrance Animations */
 @utility stagger-delay-1 {
 	animation-delay: 100ms;
 }
@@ -355,6 +362,48 @@
 
 @utility stagger-delay-4 {
 	animation-delay: 400ms;
+}
+
+@utility stagger-delay-5 {
+	animation-delay: 500ms;
+}
+
+/* Sidebar Entrance Animation */
+@utility sidebar-entrance {
+	animation: sidebar-slide-in 400ms var(--ease-fluid) both;
+	will-change: transform, opacity;
+}
+
+/* Column Entrance Animations */
+@utility column-entrance {
+	animation: column-slide-up 350ms var(--ease-fluid) both;
+	will-change: transform, opacity;
+}
+
+/* Navigation Tab Switching Animation */
+@utility nav-tab-switch {
+	animation: nav-tab-highlight 250ms var(--ease-snappy) both;
+	will-change: transform, box-shadow;
+}
+
+/* Hover Effect Animations */
+@utility hover-lift-smooth {
+	transition:
+		transform 150ms var(--ease-snappy),
+		box-shadow 150ms var(--ease-snappy);
+	will-change: transform, box-shadow;
+}
+
+@utility hover-glow-smooth {
+	transition:
+		box-shadow 200ms var(--ease-fluid),
+		border-color 200ms var(--ease-fluid);
+	will-change: box-shadow, border-color;
+}
+
+@utility hover-scale-smooth {
+	transition: transform 120ms var(--ease-snappy);
+	will-change: transform;
 }
 
 /* Keyframe Definitions */
@@ -436,6 +485,63 @@
 	}
 }
 
+/* Enhanced Entrance Animations */
+@keyframes sidebar-slide-in {
+	from {
+		transform: translateX(-100%) translateZ(0);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0) translateZ(0);
+		opacity: 1;
+	}
+}
+
+@keyframes column-slide-up {
+	from {
+		transform: translateY(30px) translateZ(0);
+		opacity: 0;
+	}
+	to {
+		transform: translateY(0) translateZ(0);
+		opacity: 1;
+	}
+}
+
+@keyframes nav-tab-highlight {
+	0% {
+		transform: scale(1) translateZ(0);
+		box-shadow: 0 0 0 color-mix(in oklch, var(--color-neon-blue) 0%, transparent);
+	}
+	50% {
+		transform: scale(1.02) translateZ(0);
+		box-shadow: 0 0 20px color-mix(in oklch, var(--color-neon-blue) 40%, transparent);
+	}
+	100% {
+		transform: scale(1) translateZ(0);
+		box-shadow: 0 0 15px color-mix(in oklch, var(--color-neon-blue) 30%, transparent);
+	}
+}
+
+/* Smooth Hover Animations */
+@keyframes gentle-glow {
+	from {
+		box-shadow: 0 0 5px color-mix(in oklch, var(--color-neon-blue) 20%, transparent);
+	}
+	to {
+		box-shadow: 0 0 20px color-mix(in oklch, var(--color-neon-blue) 40%, transparent);
+	}
+}
+
+@keyframes subtle-lift {
+	from {
+		transform: translateY(0) translateZ(0);
+	}
+	to {
+		transform: translateY(-2px) translateZ(0);
+	}
+}
+
 @keyframes neon-flicker {
 	0%,
 	100% {
@@ -464,36 +570,78 @@
 	}
 }
 
-/* Hover and Interaction Animations */
+/* Enhanced Hover and Interaction Animations */
 @utility hover-lift {
-	transition: transform 200ms var(--ease-fluid);
-}
+	transition:
+		transform 150ms var(--ease-snappy),
+		box-shadow 150ms var(--ease-snappy);
+	will-change: transform, box-shadow;
 
-@utility hover-lift {
 	&:hover {
-		transform: translateY(-4px);
+		transform: translateY(-3px) translateZ(0);
+		box-shadow: 0 8px 25px color-mix(in oklch, var(--color-neon-blue) 25%, transparent);
 	}
 }
 
 @utility hover-glow {
-	transition: box-shadow 200ms var(--ease-fluid);
-}
+	transition:
+		box-shadow 200ms var(--ease-fluid),
+		border-color 200ms var(--ease-fluid);
+	will-change: box-shadow, border-color;
 
-@utility hover-glow {
 	&:hover {
 		box-shadow:
 			0 0 20px color-mix(in oklch, var(--color-neon-blue) 40%, transparent),
 			0 8px 25px color-mix(in oklch, var(--color-neon-blue) 25%, transparent);
+		border-color: color-mix(in oklch, var(--color-neon-blue) 50%, transparent);
 	}
 }
 
 @utility hover-scale {
-	transition: transform 150ms var(--ease-snappy);
+	transition: transform 120ms var(--ease-snappy);
+	will-change: transform;
+
+	&:hover {
+		transform: scale(1.03) translateZ(0);
+	}
 }
 
-@utility hover-scale {
+/* Navigation Item Hover Effects */
+@utility nav-hover {
+	transition: all 180ms var(--ease-fluid);
+	will-change: transform, background-color, box-shadow;
+
 	&:hover {
-		transform: scale(1.05);
+		transform: translateX(4px) translateZ(0);
+		background: color-mix(in oklch, var(--color-neon-blue) 15%, transparent);
+		box-shadow: 0 0 15px color-mix(in oklch, var(--color-neon-blue) 25%, transparent);
+	}
+}
+
+/* Column Hover Effects */
+@utility column-hover {
+	transition:
+		transform 200ms var(--ease-fluid),
+		box-shadow 200ms var(--ease-fluid);
+	will-change: transform, box-shadow;
+
+	&:hover {
+		transform: translateY(-2px) translateZ(0);
+		box-shadow:
+			0 0 30px color-mix(in oklch, var(--color-neon-blue) 20%, transparent),
+			0 10px 40px color-mix(in oklch, var(--color-neon-blue) 15%, transparent);
+	}
+}
+
+/* Interactive Element Hover */
+@utility interactive-hover {
+	transition: all 150ms var(--ease-snappy);
+	will-change: transform, opacity, box-shadow;
+
+	&:hover {
+		transform: scale(1.02) translateZ(0);
+		opacity: 0.9;
+		box-shadow: 0 0 10px color-mix(in oklch, var(--color-neon-blue) 30%, transparent);
 	}
 }
 

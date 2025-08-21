@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import { navigationStore } from '$lib/stores/navigation.svelte';
 	import NavigationSidebar from '../navigation/NavigationSidebar.svelte';
+	import { animationManager } from '$lib/utils/animation-manager';
 	import type { AppState, LayoutConfig } from '$lib/types/layout';
 
 	interface Props {
@@ -159,33 +160,76 @@
 		}
 	}
 
-	// Layout animation coordination
+	// Enhanced layout animation coordination with performance monitoring
 	function coordinateLayoutAnimation() {
 		if (!layoutConfig.enableAnimations) return;
 
 		try {
+			const animationStart = performance.now();
 			isAnimating = true;
 
-			// Stagger animations for sidebar and content
+			// Stagger animations for sidebar and content with performance optimization
 			if (appShellElement) {
 				const sidebar = appShellElement.querySelector('[data-testid="navigation-sidebar"]');
 				const mainContent = appShellElement.querySelector('.main-content-area');
 
+				// Sidebar entrance animation
 				if (sidebar) {
-					sidebar.classList.add('slide-in-left');
+					(sidebar as HTMLElement).classList.add('sidebar-entrance');
+
+					// Add navigation items stagger animation
+					const navItems = sidebar.querySelectorAll('[data-testid^="nav-item-"]');
+					navItems.forEach((item, index) => {
+						setTimeout(
+							() => {
+								(item as HTMLElement).classList.add('fade-in', `stagger-delay-${index + 1}`);
+							},
+							200 + index * 50
+						);
+					});
 				}
 
+				// Main content entrance animation
 				if (mainContent) {
 					setTimeout(() => {
-						(mainContent as HTMLElement).classList.add('slide-in-right', 'stagger-delay-1');
+						(mainContent as HTMLElement).classList.add('slide-in-right', 'stagger-delay-2');
+
+						// Trigger column animations after main content
+						setTimeout(() => {
+							const columns = mainContent.querySelectorAll('[data-testid^="column-wrapper-"]');
+							columns.forEach((column, index) => {
+								setTimeout(() => {
+									(column as HTMLElement).classList.add(
+										'column-entrance',
+										`stagger-delay-${index + 1}`
+									);
+								}, index * 100);
+							});
+						}, 150);
 					}, 100);
 				}
 			}
 
-			// Reset animation state
+			// Performance monitoring and cleanup
 			setTimeout(() => {
+				const animationEnd = performance.now();
+				const duration = animationEnd - animationStart;
+
+				// Log performance warning if animation takes too long
+				if (duration > 500) {
+					console.warn(`Layout animation took ${duration}ms (target: <500ms)`);
+				}
+
 				isAnimating = false;
-			}, 400);
+
+				// Clean up will-change properties for performance
+				if (appShellElement) {
+					const animatedElements = appShellElement.querySelectorAll('[style*="will-change"]');
+					animatedElements.forEach((el) => {
+						(el as HTMLElement).style.willChange = 'auto';
+					});
+				}
+			}, 600);
 		} catch (error) {
 			handleLayoutError(error as Error, 'animation coordination');
 		}
@@ -210,6 +254,13 @@
 	onMount(() => {
 		updateViewport();
 		applyTheme();
+
+		// Trigger entrance animations after initial render
+		if (appShellElement && layoutConfig.enableAnimations) {
+			setTimeout(() => {
+				animationManager.triggerEntranceAnimations(appShellElement!);
+			}, 100);
+		}
 	});
 
 	// Set up resize observer effect
