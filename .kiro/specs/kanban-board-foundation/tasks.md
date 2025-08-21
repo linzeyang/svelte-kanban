@@ -44,7 +44,8 @@
   - Write unit tests for kanban state operations
   - _Requirements: 2.1, 2.2, 7.3_
 
-- [ ] 7. Build KanbanBoard and KanbanColumn components
+- [x] 7. Build KanbanBoard and KanbanColumn components
+  - Refer to the documentation by using 'svelte-llm' MCP server before actual implementation
   - Create KanbanBoard.svelte with four-column grid layout and responsive design
   - Implement KanbanColumn.svelte with status-specific neon borders and theming
   - Add column headers with proper typography and visual hierarchy
