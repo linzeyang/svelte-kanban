@@ -5,6 +5,23 @@
 
 import type { TaskItem, TaskStatus, KanbanColumn, KanbanBoard } from '$lib/types/kanban.js';
 
+// Type definition for import data structure
+type ImportData = {
+	version: number;
+	exportedAt: string | Date;
+	board: {
+		tasks: (TaskItem & { createdAt: string; updatedAt: string })[];
+		[key: string]: unknown;
+	};
+	statistics?: {
+		totalTasks: number;
+		completedTasks: number;
+		aiGeneratedTasks: number;
+		completionRate: number;
+	};
+	[key: string]: unknown;
+};
+
 class KanbanStore {
 	// Core reactive state using Svelte 5 $state rune
 	private tasks = $state<TaskItem[]>([]);
@@ -84,7 +101,7 @@ class KanbanStore {
 	// Board data structure
 	boardData = $derived<KanbanBoard>({
 		id: 'main-board',
-		title: 'AI-Native Kanban Board',
+		title: 'Task Board',
 		columns: this.columns.map((column) => ({
 			...column,
 			tasks: this.tasks.filter((task) => task.status === column.id)
@@ -243,7 +260,7 @@ class KanbanStore {
 					// Validate data structure and version
 					if (data.version === 1 && Array.isArray(data.tasks)) {
 						// Convert date strings back to Date objects
-						this.tasks = data.tasks.map((task: any) => ({
+						this.tasks = data.tasks.map((task: TaskItem & { createdAt: string; updatedAt: string }) => ({
 							...task,
 							createdAt: new Date(task.createdAt),
 							updatedAt: new Date(task.updatedAt)
@@ -272,7 +289,7 @@ class KanbanStore {
 		};
 	}
 
-	importData(data: any) {
+	importData(data: ImportData) {
 		try {
 			if (data.version === 1 && data.board?.tasks) {
 				// Clear existing data
@@ -281,7 +298,7 @@ class KanbanStore {
 				this.clearError();
 
 				// Import tasks with proper date conversion
-				const importedTasks = data.board.tasks.map((task: any) => ({
+				const importedTasks = data.board.tasks.map((task: TaskItem & { createdAt: string; updatedAt: string }) => ({
 					...task,
 					createdAt: new Date(task.createdAt),
 					updatedAt: new Date(task.updatedAt)

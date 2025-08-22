@@ -357,7 +357,7 @@ describe('KanbanStore', () => {
 			const boardData = kanbanStore.boardData;
 
 			expect(boardData.id).toBe('main-board');
-			expect(boardData.title).toBe('AI-Native Kanban Board');
+			expect(boardData.title).toBe('Task Board');
 			expect(boardData.columns).toHaveLength(4);
 			expect(boardData.tasks).toHaveLength(2);
 
@@ -625,19 +625,20 @@ describe('KanbanStore', () => {
 		test('should import data correctly', () => {
 			const importData = {
 				version: 1,
+				exportedAt: new Date().toISOString(),
 				board: {
 					tasks: [
 						{
 							id: 'imported-task',
 							title: 'Imported Task',
 							description: 'From import',
-							status: 'todo',
+							status: 'todo' as TaskStatus,
 							createdAt: new Date().toISOString(),
 							updatedAt: new Date().toISOString()
 						}
 					]
 				}
-			};
+			} as unknown as Parameters<typeof kanbanStore.importData>[0];
 
 			const success = kanbanStore.importData(importData);
 
@@ -647,7 +648,12 @@ describe('KanbanStore', () => {
 		});
 
 		test('should handle invalid import data', () => {
-			const invalidData = { version: 2, invalid: true };
+			const invalidData = {
+				version: 2,
+				invalid: true,
+				exportedAt: new Date().toISOString(),
+				board: { tasks: [] }
+			} as unknown as Parameters<typeof kanbanStore.importData>[0];
 
 			const success = kanbanStore.importData(invalidData);
 

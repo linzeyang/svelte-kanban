@@ -1,9 +1,20 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import '../app.css';
 	import AppShell from '$lib/components/layout/AppShell.svelte';
 	import favicon from '$lib/assets/favicon.svg';
+	import { initializeErrorRecovery } from '$lib/utils/error-recovery';
 
 	let { children } = $props();
+
+	// Initialize error recovery system on mount
+	onMount(() => {
+		try {
+			initializeErrorRecovery();
+		} catch (error) {
+			console.error('Failed to initialize error recovery:', error);
+		}
+	});
 </script>
 
 <svelte:head>

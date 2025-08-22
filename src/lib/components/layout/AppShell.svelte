@@ -259,7 +259,17 @@
 		if (appShellElement && layoutConfig.enableAnimations) {
 			setTimeout(() => {
 				animationManager.triggerEntranceAnimations(appShellElement!);
+
+				// Signal layout ready after animations start
+				setTimeout(() => {
+					signalLayoutReady();
+				}, 200); // Allow animations to stabilize
 			}, 100);
+		} else {
+			// Signal ready immediately if no animations
+			setTimeout(() => {
+				signalLayoutReady();
+			}, 50);
 		}
 	});
 
@@ -346,6 +356,25 @@
 
 	export function clearLayoutError() {
 		layoutError = null;
+	}
+
+	// Signal when layout is ready for tests
+	function signalLayoutReady() {
+		if (typeof window !== 'undefined' && appShellElement) {
+			// Add a data attribute to signal layout is ready
+			appShellElement.setAttribute('data-layout-ready', 'true');
+
+			// Dispatch custom event for test coordination
+			const event = new CustomEvent('layout-ready', {
+				detail: {
+					viewport,
+					isMobile,
+					isCollapsed,
+					activeItem: currentActiveItem
+				}
+			});
+			window.dispatchEvent(event);
+		}
 	}
 </script>
 

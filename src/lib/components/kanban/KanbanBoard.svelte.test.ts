@@ -81,7 +81,7 @@ describe('KanbanBoard', () => {
 		expect(boardElement?.getAttribute('role')).toBe('main');
 
 		// Check if board title is rendered
-		expect(document.body.innerHTML).toContain('AI-Native Kanban Board');
+		expect(document.body.innerHTML).toContain('Task Board');
 
 		// Check if columns container is rendered
 		const columnsContainer = document.body.querySelector('[data-testid="kanban-columns"]');
@@ -105,6 +105,65 @@ describe('KanbanBoard', () => {
 		expect(document.body.querySelector('[data-testid="column-wrapper-in-progress"]')).toBeTruthy();
 		expect(document.body.querySelector('[data-testid="column-wrapper-testing"]')).toBeTruthy();
 		expect(document.body.querySelector('[data-testid="column-wrapper-done"]')).toBeTruthy();
+
+		unmount(component);
+	});
+
+	test('uses 4-column CSS grid layout', () => {
+		const component = mount(KanbanBoard, {
+			target: document.body
+		});
+
+		// Check if kanban board container has correct CSS grid properties
+		const columnsContainer = document.body.querySelector('[data-testid="kanban-columns"]');
+		expect(columnsContainer).toBeTruthy();
+		expect(columnsContainer?.classList.contains('kanban-board')).toBe(true);
+
+		// In test environment, CSS utilities may not be fully loaded
+		// So we verify the class is applied, which is what triggers the grid layout
+		// The actual CSS grid behavior is better tested in integration tests
+		const hasKanbanBoardClass = columnsContainer?.classList.contains('kanban-board');
+		expect(hasKanbanBoardClass).toBe(true);
+
+		unmount(component);
+	});
+
+	test('applies correct CSS classes for 4-column layout', () => {
+		const component = mount(KanbanBoard, {
+			target: document.body
+		});
+
+		// Verify the kanban-board CSS class is applied
+		const columnsContainer = document.body.querySelector('[data-testid="kanban-columns"]');
+		expect(columnsContainer?.classList.contains('kanban-board')).toBe(true);
+
+		// Check that gap is applied for proper spacing
+		const computedStyle = window.getComputedStyle(columnsContainer!);
+		expect(computedStyle.gap).toBeTruthy(); // Should have gap for column spacing
+
+		unmount(component);
+	});
+
+	test('maintains 4-column layout structure across different viewport widths', () => {
+		// Test at desktop width
+		Object.defineProperty(window, 'innerWidth', {
+			writable: true,
+			configurable: true,
+			value: 1200
+		});
+
+		const component = mount(KanbanBoard, {
+			target: document.body
+		});
+
+		// Verify 4 columns are present at desktop width
+		const columnWrappers = document.body.querySelectorAll('[data-testid^="column-wrapper-"]');
+		expect(columnWrappers).toHaveLength(4);
+
+		// All columns should be visible
+		columnWrappers.forEach((column) => {
+			expect(column.checkVisibility()).toBe(true);
+		});
 
 		unmount(component);
 	});

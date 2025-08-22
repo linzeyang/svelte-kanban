@@ -45,7 +45,7 @@
 	/* Layout Dimensions */
 	--sidebar-width: 240px;
 	--sidebar-collapsed-width: 60px;
-	--column-min-width: 280px;
+	--column-min-width: 220px;
 	--card-border-radius: 0.75rem;
 }
 
@@ -118,7 +118,7 @@
 /* Kanban Column Utilities */
 @utility kanban-board {
 	display: grid;
-	grid-template-columns: repeat(4, minmax(var(--column-min-width), 1fr));
+	grid-template-columns: repeat(4, minmax(var(--column-min-width), 1fr)) !important;
 	gap: 1.5rem;
 	padding: 1rem;
 	container-type: inline-size;
@@ -240,8 +240,8 @@
 	container-type: inline-size;
 }
 
-/* Tablet Layout - 2 columns */
-@container (max-width: 768px) {
+/* Small screen Layout - 2 columns */
+@media (max-width: 768px) {
 	.kanban-board {
 		grid-template-columns: repeat(2, 1fr);
 		gap: 1rem;
