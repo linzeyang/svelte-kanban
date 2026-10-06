@@ -24,7 +24,7 @@ export default defineConfig({
 	// Performance optimizations
 	build: {
 		target: 'esnext',
-		minify: 'esbuild',
+		minify: 'oxc',
 		cssMinify: true,
 		rollupOptions: {
 			output: {
