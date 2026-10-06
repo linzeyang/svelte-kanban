@@ -2,8 +2,8 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { flushSync, mount, unmount } from 'svelte';
 import KanbanBoard from './KanbanBoard.svelte';
-import { kanbanStore } from '$lib/stores/kanban.svelte.js';
-import type { TaskItem } from '$lib/types/kanban.js';
+import { kanbanStore } from '#lib/stores/kanban.svelte.js';
+import type { TaskItem } from '#lib/types/kanban.js';
 
 // Mock localStorage
 const localStorageMock = {

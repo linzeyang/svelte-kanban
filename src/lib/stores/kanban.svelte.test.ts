@@ -5,7 +5,7 @@
 
 import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { kanbanStore } from './kanban.svelte.js';
-import type { TaskStatus } from '$lib/types/kanban.js';
+import type { TaskStatus } from '#lib/types/kanban.js';
 
 // Mock localStorage for testing
 const mockLocalStorage = {

@@ -13,6 +13,7 @@ describe('Performance Monitoring System', () => {
 	beforeEach(() => {
 		// Reset all monitors
 		performanceMonitor.clearData();
+		bundleAnalyzer.clearData();
 		performanceMonitor.startMonitoring();
 	});
 
@@ -43,22 +44,24 @@ describe('Performance Monitoring System', () => {
 		test('should detect animation performance violations', () => {
 			const violations: any[] = [];
 
-			// Listen for performance violations
-			window.addEventListener('performance-violation', (event: any) => {
-				violations.push(event.detail);
-			});
+			// Listen for performance violations (removed afterwards to keep tests isolated)
+			const handler = (event: any) => violations.push(event.detail);
+			window.addEventListener('performance-violation', handler);
 
-			// Simulate slow animation (over 16.67ms threshold)
-			performanceMonitor.measure('slow-animation', () => {
+			// Measure under a name that has a registered threshold ('animation-frame' = 16.67ms);
+			// recordMetric only emits a violation when the metric name has a threshold.
+			performanceMonitor.measure('animation-frame', () => {
 				const start = performance.now();
 				while (performance.now() - start < 20) {
-					// Busy wait for 20ms (over 60fps threshold)
+					// Busy wait for 20ms (over the 60fps threshold)
 				}
 			}, 'animation');
 
+			window.removeEventListener('performance-violation', handler);
+
 			// Check if violation was detected
 			expect(violations.length).toBeGreaterThan(0);
-			expect(violations[0].name).toBe('slow-animation');
+			expect(violations[0].name).toBe('animation-frame');
 			expect(violations[0].value).toBeGreaterThan(16.67);
 		});
 
@@ -146,7 +149,7 @@ describe('Performance Monitoring System', () => {
 			expect(stats!.avg).toBe(0.05);
 		});
 
-		test('should monitor responsive layout adaptation', () => {
+		test('should monitor responsive layout adaptation', async () => {
 			responsiveMonitor.startMonitoring();
 
 			// Simulate layout adaptation
@@ -155,8 +158,11 @@ describe('Performance Monitoring System', () => {
 				document.body.offsetHeight; // Force reflow
 			});
 
-			const stats = performanceMonitor.getStats('responsive-layout');
-			expect(stats).toBeTruthy();
+			// measureLayoutAdaptation records the metric after two animation frames, so
+			// poll until it lands instead of reading it synchronously.
+			await expect
+				.poll(() => performanceMonitor.getStats('responsive-layout'), { timeout: 3000 })
+				.toBeTruthy();
 		});
 	});
 
@@ -186,10 +192,12 @@ describe('Performance Monitoring System', () => {
 		test('should detect memory leaks', () => {
 			memoryMonitor.startMonitoring();
 
-			// Simulate excessive event listeners
-			const mockTarget = document.createElement('div');
+			// Simulate excessive event listeners. trackEventListener keys listeners by type
+			// within each target, so use distinct targets to actually accumulate past the
+			// >100 listener threshold.
 			for (let i = 0; i < 150; i++) {
-				memoryMonitor.trackEventListener(mockTarget, 'click', () => {});
+				const target = document.createElement('div');
+				memoryMonitor.trackEventListener(target, 'click', () => {});
 			}
 
 			const leaks = memoryMonitor.detectMemoryLeaks();
@@ -237,8 +245,9 @@ describe('Performance Monitoring System', () => {
 			const mockElement = document.createElement('div');
 			mockElement.setAttribute('data-svelte-component', 'LargeComponent');
 
-			// Make it appear large
-			const largeContent = 'x'.repeat(10000);
+			// Exceed the 50KB single-component threshold (estimateComponentSize is based on
+			// outerHTML length) so a lazy-load recommendation is actually produced.
+			const largeContent = 'x'.repeat(60 * 1024);
 			mockElement.innerHTML = `<div>${largeContent}</div>`;
 			document.body.appendChild(mockElement);
 
@@ -313,9 +322,9 @@ describe('Performance Monitoring System', () => {
 		});
 
 		test('should handle performance pressure scenarios', () => {
-			memoryMonitor.startMonitoring();
+			vi.useFakeTimers();
 
-			// Mock high memory usage
+			// Mock critical memory usage (95%)
 			const mockMemory = {
 				usedJSHeapSize: 95 * 1024 * 1024, // 95MB
 				totalJSHeapSize: 100 * 1024 * 1024, // 100MB
@@ -327,12 +336,29 @@ describe('Performance Monitoring System', () => {
 				configurable: true
 			});
 
-			const metrics = memoryMonitor.getMemoryMetrics();
-			expect(metrics!.percentage).toBe(0.95); // 95% usage
+			try {
+				const pressureEvents: any[] = [];
+				const handler = (event: any) => pressureEvents.push(event.detail);
+				window.addEventListener('memory-pressure', handler);
 
-			// Should trigger memory pressure handling
-			const leaks = memoryMonitor.detectMemoryLeaks();
-			expect(leaks.some(leak => leak.severity === 'high')).toBe(true);
+				memoryMonitor.startMonitoring();
+
+				const metrics = memoryMonitor.getMemoryMetrics();
+				expect(metrics!.percentage).toBe(0.95); // 95% usage
+
+				// The 5s monitoring interval reacts to critical usage by handling memory
+				// pressure, which emits a high-severity 'memory-pressure' event.
+				vi.advanceTimersByTime(5000);
+
+				window.removeEventListener('memory-pressure', handler);
+
+				expect(pressureEvents.length).toBeGreaterThan(0);
+				expect(pressureEvents[0].severity).toBe('high');
+			} finally {
+				vi.useRealTimers();
+				// Restore the native performance.memory so the mock does not leak
+				Reflect.deleteProperty(performance, 'memory');
+			}
 		});
 	});
 });

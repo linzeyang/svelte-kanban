@@ -2,7 +2,7 @@
 import { describe, test, expect, beforeEach } from 'vitest';
 import { flushSync, mount, unmount } from 'svelte';
 import KanbanColumn from './KanbanColumn.svelte';
-import type { KanbanColumn as KanbanColumnType, TaskItem, TaskStatus } from '$lib/types/kanban.js';
+import type { KanbanColumn as KanbanColumnType, TaskItem, TaskStatus } from '#lib/types/kanban.js';
 
 describe('KanbanColumn', () => {
 	let mockColumn: KanbanColumnType;

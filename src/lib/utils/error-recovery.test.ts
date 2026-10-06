@@ -13,7 +13,7 @@ declare global {
 }
 
 // Mock the stores before importing them
-vi.mock('$lib/stores/navigation.svelte.ts', () => ({
+vi.mock('#lib/stores/navigation.svelte.ts', () => ({
 	navigationStore: {
 		setSidebarCollapsed: vi.fn(),
 		setActiveItem: vi.fn(() => true),
@@ -21,7 +21,7 @@ vi.mock('$lib/stores/navigation.svelte.ts', () => ({
 	}
 }));
 
-vi.mock('$lib/stores/kanban.svelte.ts', () => ({
+vi.mock('#lib/stores/kanban.svelte.ts', () => ({
 	kanbanStore: {
 		clearError: vi.fn(),
 		loadFromStorage: vi.fn(),
@@ -31,8 +31,8 @@ vi.mock('$lib/stores/kanban.svelte.ts', () => ({
 
 // Import after mocks to ensure they're hoisted
 import { LayoutErrorRecovery, useErrorRecovery, initializeErrorRecovery } from './error-recovery';
-import { navigationStore } from '$lib/stores/navigation.svelte';
-import { kanbanStore } from '$lib/stores/kanban.svelte';
+import { navigationStore } from '#lib/stores/navigation.svelte.js';
+import { kanbanStore } from '#lib/stores/kanban.svelte.js';
 
 describe('LayoutErrorRecovery', () => {
 	beforeEach(() => {

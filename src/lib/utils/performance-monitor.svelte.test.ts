@@ -153,10 +153,15 @@ describe('Performance Monitor (Browser)', () => {
 
 			for (let i = 0; i < iterations; i++) {
 				performanceMonitor.measure(`animation-${i}`, () => {
-					const element = document.createElement('div');
-					element.style.transform = `translateX(${i}px)`;
-					document.body.appendChild(element);
-					document.body.removeChild(element);
+					// Do enough DOM work to be measurable above the ~0.1ms timer
+					// resolution; a single create/append/remove can round to 0ms and
+					// flake the `avgTime > 0` assertion.
+					for (let j = 0; j < 30; j++) {
+						const element = document.createElement('div');
+						element.style.transform = `translateX(${i + j}px)`;
+						document.body.appendChild(element);
+						document.body.removeChild(element);
+					}
 				}, 'animation');
 
 				const stats = performanceMonitor.getStats(`animation-${i}`);
@@ -190,10 +195,14 @@ describe('Performance Monitor (Browser)', () => {
 					element.style.position = 'absolute';
 					document.body.appendChild(element);
 
-					// Simulate drag movement
-					for (let j = 0; j < 5; j++) {
+					// Simulate drag movement. Reading offsetHeight after each write forces
+					// a synchronous layout, keeping the measurement above the ~0.1ms timer
+					// resolution (batched style writes alone can round to 0ms and flake
+					// the `avgTime > 0` assertion).
+					for (let j = 0; j < 50; j++) {
 						element.style.left = `${j * 10}px`;
 						element.style.top = `${j * 5}px`;
+						element.offsetHeight; // Force synchronous layout
 					}
 
 					document.body.removeChild(element);
@@ -226,9 +235,13 @@ describe('Performance Monitor (Browser)', () => {
 			document.body.appendChild(container);
 
 			performanceMonitor.measure('layout-test', () => {
-				container.style.width = '200px';
-				container.style.height = '200px';
-				container.offsetHeight; // Force layout
+				// Perform enough forced reflows to be measurable above timer resolution
+				// (a single style write + reflow can round to 0ms and flake the >0 check).
+				for (let i = 0; i < 100; i++) {
+					container.style.width = `${200 + i}px`;
+					container.style.height = `${200 + i}px`;
+					container.offsetHeight; // Force synchronous layout
+				}
 			}, 'layout');
 
 			const stats = performanceMonitor.getStats('layout-test');

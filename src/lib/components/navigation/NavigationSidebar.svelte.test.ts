@@ -1,10 +1,10 @@
 import { flushSync, mount, unmount } from 'svelte';
 import { expect, test, describe, vi, beforeEach, afterEach } from 'vitest';
 import NavigationSidebar from './NavigationSidebar.svelte';
-import { navigationStore } from '$lib/stores/navigation.svelte';
+import { navigationStore } from '#lib/stores/navigation.svelte.js';
 
 // Mock the navigation store
-vi.mock('$lib/stores/navigation.svelte.ts', () => ({
+vi.mock('#lib/stores/navigation.svelte.ts', () => ({
 	navigationStore: {
 		navigationItems: [
 			{

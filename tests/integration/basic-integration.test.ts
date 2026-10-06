@@ -31,8 +31,8 @@ test.describe('Basic Application Integration', () => {
 		const kanbanBoard = page.locator('[data-testid="kanban-board"]');
 		await expect(kanbanBoard).toBeVisible();
 
-		// Verify application header is displayed
-		const appTitle = page.locator('h1').first();
+		// Verify application header is displayed (scoped — the sidebar also renders an <h1>)
+		const appTitle = page.locator('[data-testid="main-app-content"] h1').first();
 		await expect(appTitle).toContainText('AI-Native Kanban');
 
 		// Verify system status is shown

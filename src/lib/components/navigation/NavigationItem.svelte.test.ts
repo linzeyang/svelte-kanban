@@ -1,11 +1,11 @@
 import { flushSync, mount, unmount } from 'svelte';
-import { expect, test, describe, vi, beforeEach } from 'vitest';
+import { expect, test, describe, vi, beforeEach, type Mock } from 'vitest';
 import NavigationItem from './NavigationItem.svelte';
-import type { NavigationItem as NavigationItemType } from '$lib/types/navigation.ts';
+import type { NavigationItem as NavigationItemType } from '#lib/types/navigation.ts';
 
 describe('NavigationItem', () => {
 	let mockItem: NavigationItemType;
-	let mockOnActivate: ReturnType<typeof vi.fn>;
+	let mockOnActivate: Mock<(itemId: string) => void>;
 
 	beforeEach(() => {
 		// Clean up DOM
@@ -18,7 +18,7 @@ describe('NavigationItem', () => {
 			active: false,
 			disabled: false
 		};
-		mockOnActivate = vi.fn();
+		mockOnActivate = vi.fn<(itemId: string) => void>();
 	});
 
 	test('renders navigation item with correct content', () => {
