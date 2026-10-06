@@ -9,9 +9,9 @@ Usage:
 ```
 -->
 <script lang="ts">
-	import { kanbanStore } from '$lib/stores/kanban.svelte.js';
+	import { kanbanStore } from '#lib/stores/kanban.svelte.js';
 	import KanbanColumn from './KanbanColumn.svelte';
-	import type { KanbanColumn as KanbanColumnType } from '$lib/types/kanban.js';
+	import type { KanbanColumn as KanbanColumnType } from '#lib/types/kanban.js';
 
 	// Get reactive board data from the store
 	let boardData = $derived(kanbanStore.boardData);

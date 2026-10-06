@@ -234,8 +234,12 @@ class PerformanceMonitor {
 		try {
 			const observer = new PerformanceObserver((list) => {
 				for (const entry of list.getEntries()) {
-					if (entry.entryType === 'layout-shift' && !(entry as any).hadRecentInput) {
-						this.recordMetric('layout-shift', (entry as unknown).value, 'layout');
+					const layoutShift = entry as PerformanceEntry & {
+						value: number;
+						hadRecentInput?: boolean;
+					};
+					if (entry.entryType === 'layout-shift' && !layoutShift.hadRecentInput) {
+						this.recordMetric('layout-shift', layoutShift.value, 'layout');
 					}
 				}
 			});

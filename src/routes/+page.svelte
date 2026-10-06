@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { navigationStore } from '$lib/stores/navigation.svelte';
-	import { kanbanStore } from '$lib/stores/kanban.svelte';
-	import KanbanBoard from '$lib/components/kanban/KanbanBoard.svelte';
-	import { LayoutErrorRecovery, useErrorRecovery } from '$lib/utils/error-recovery';
+	import { navigationStore } from '#lib/stores/navigation.svelte.js';
+	import { kanbanStore } from '#lib/stores/kanban.svelte.js';
+	import KanbanBoard from '#lib/components/kanban/KanbanBoard.svelte';
+	import { LayoutErrorRecovery, useErrorRecovery } from '#lib/utils/error-recovery.js';
 
 	// Error recovery for this component
 	const { handleError } = useErrorRecovery('MainPage');

@@ -1,10 +1,10 @@
 <!-- AppShell.svelte - Main application layout with sidebar and content areas -->
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { navigationStore } from '$lib/stores/navigation.svelte';
+	import { navigationStore } from '#lib/stores/navigation.svelte.js';
 	import NavigationSidebar from '../navigation/NavigationSidebar.svelte';
-	import { animationManager } from '$lib/utils/animation-manager';
-	import type { AppState, LayoutConfig } from '$lib/types/layout';
+	import { animationManager } from '#lib/utils/animation-manager.js';
+	import type { AppState, LayoutConfig } from '#lib/types/layout.js';
 
 	interface Props {
 		/** Override for active navigation item */
@@ -35,7 +35,9 @@
 		enableAnimations: true
 	};
 
-	const layoutConfig = { ...defaultConfig, ...config };
+	// Derived so layout config stays reactive when the `config` prop changes
+	// (avoids Svelte's state_referenced_locally warning).
+	const layoutConfig = $derived({ ...defaultConfig, ...config });
 
 	// Reactive state from navigation store
 	let isCollapsed = $derived(sidebarCollapsed ?? navigationStore.isCollapsed);

@@ -5,12 +5,12 @@
 -->
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import { performanceMonitor } from '$lib/utils/performance-monitor.js';
-	import { responsiveMonitor } from '$lib/utils/responsive-monitor.js';
-	import { bundleAnalyzer } from '$lib/utils/bundle-analyzer.js';
-	import { memoryMonitor } from '$lib/utils/memory-monitor.js';
-	import type { PerformanceStats } from '$lib/utils/performance-monitor.js';
-	import type { MemoryMetrics } from '$lib/utils/memory-monitor.js';
+	import { performanceMonitor } from '#lib/utils/performance-monitor.js';
+	import { responsiveMonitor } from '#lib/utils/responsive-monitor.js';
+	import { bundleAnalyzer } from '#lib/utils/bundle-analyzer.js';
+	import { memoryMonitor } from '#lib/utils/memory-monitor.js';
+	import type { PerformanceStats } from '#lib/utils/performance-monitor.js';
+	import type { MemoryMetrics } from '#lib/utils/memory-monitor.js';
 
 	// Component state
 	let isVisible = $state(false);

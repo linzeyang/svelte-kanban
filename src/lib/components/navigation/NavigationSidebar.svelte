@@ -1,8 +1,8 @@
 <!-- NavigationSidebar.svelte - Main navigation sidebar with responsive design -->
 <script lang="ts">
-	import { navigationStore } from '$lib/stores/navigation.svelte';
+	import { navigationStore } from '#lib/stores/navigation.svelte.js';
 	import NavigationItem from './NavigationItem.svelte';
-	import { animationManager } from '$lib/utils/animation-manager';
+	import { animationManager } from '#lib/utils/animation-manager.js';
 
 	interface Props {
 		/** Override collapsed state (for external control) */

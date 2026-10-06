@@ -212,7 +212,7 @@ class MemoryMonitor {
 	 */
 	forceGarbageCollection(): void {
 		if ('gc' in window && typeof (window as any).gc === 'function') {
-			(window as unknown).gc();
+			(window as unknown as { gc: () => void }).gc();
 			console.log('🗑️ Forced garbage collection');
 		} else {
 			console.warn('Garbage collection not available');

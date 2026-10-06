@@ -9,7 +9,7 @@ Usage:
 ```
 -->
 <script lang="ts">
-	import type { KanbanColumn } from '$lib/types/kanban.js';
+	import type { KanbanColumn } from '#lib/types/kanban.js';
 
 	interface Props {
 		column: KanbanColumn;

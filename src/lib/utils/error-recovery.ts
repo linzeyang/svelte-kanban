@@ -3,8 +3,8 @@
  * Provides graceful fallback mechanisms and recovery strategies
  */
 
-import { navigationStore } from '$lib/stores/navigation.svelte';
-import { kanbanStore } from '$lib/stores/kanban.svelte';
+import { navigationStore } from '#lib/stores/navigation.svelte.js';
+import { kanbanStore } from '#lib/stores/kanban.svelte.js';
 
 export class LayoutErrorRecovery {
 	/**

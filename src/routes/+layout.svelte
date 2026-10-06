@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import '../app.css';
-	import AppShell from '$lib/components/layout/AppShell.svelte';
-	import PerformanceDashboard from '$lib/components/debug/PerformanceDashboard.svelte';
-	import favicon from '$lib/assets/favicon.svg';
-	import { initializeErrorRecovery } from '$lib/utils/error-recovery';
-	import { performanceMonitor } from '$lib/utils/performance-monitor';
-	import { memoryMonitor, useMemoryCleanup } from '$lib/utils/memory-monitor';
+	import AppShell from '#lib/components/layout/AppShell.svelte';
+	import PerformanceDashboard from '#lib/components/debug/PerformanceDashboard.svelte';
+	import favicon from '#lib/assets/favicon.svg';
+	import { initializeErrorRecovery } from '#lib/utils/error-recovery.js';
+	import { performanceMonitor } from '#lib/utils/performance-monitor.js';
+	import { memoryMonitor, useMemoryCleanup } from '#lib/utils/memory-monitor.js';
 
 	let { children } = $props();
 

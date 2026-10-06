@@ -1,6 +1,6 @@
 <!-- NavigationItem.svelte - Individual navigation item with modern styling -->
 <script lang="ts">
-	import type { NavigationItem } from '$lib/types/navigation.ts';
+	import type { NavigationItem } from '#lib/types/navigation.ts';
 
 	interface Props {
 		item: NavigationItem;

@@ -3,7 +3,7 @@
  * Provides reactive state for kanban board, columns, and task management
  */
 
-import type { TaskItem, TaskStatus, KanbanColumn, KanbanBoard } from '$lib/types/kanban.js';
+import type { TaskItem, TaskStatus, KanbanColumn, KanbanBoard } from '#lib/types/kanban.js';
 
 // Type definition for import data structure
 type ImportData = {

@@ -3,7 +3,7 @@
  * Provides reactive state for sidebar navigation and active item management
  */
 
-import type { NavigationItem } from '$lib/types/navigation.ts';
+import type { NavigationItem } from '#lib/types/navigation.ts';
 
 class NavigationStore {
 	// Core reactive state using Svelte 5 $state rune
