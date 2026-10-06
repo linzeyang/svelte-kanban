@@ -6,7 +6,7 @@ import { defineConfig } from '@playwright/test';
  */
 export default defineConfig({
 	webServer: {
-		command: 'npm run dev',
+		command: 'pnpm run dev',
 		port: 5173,
 		reuseExistingServer: true,
 		timeout: 120000
@@ -31,7 +31,8 @@ export default defineConfig({
 	workers: process.env.CI ? 1 : undefined,
 	// Test output settings
 	reporter: [
-		['html', { outputFolder: 'test-results/integration-report' }],
+		// open:'never' prevents the report server from blocking the terminal on failure.
+		['html', { outputFolder: 'test-results/integration-report', open: 'never' }],
 		['json', { outputFile: 'test-results/integration-results.json' }],
 		['junit', { outputFile: 'test-results/integration-results.xml' }]
 	],

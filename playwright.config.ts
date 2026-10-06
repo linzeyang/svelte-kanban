@@ -2,7 +2,7 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
 	webServer: {
-		command: 'npm run build && npm run preview',
+		command: 'pnpm run build && pnpm run preview',
 		port: 4173,
 		reuseExistingServer: !process.env.CI,
 		timeout: 120000
@@ -38,7 +38,9 @@ export default defineConfig({
 	workers: process.env.CI ? 1 : undefined,
 	// Test output settings
 	reporter: [
-		['html'],
+		// open:'never' prevents Playwright auto-serving the HTML report on failure,
+		// which otherwise blocks the terminal indefinitely.
+		['html', { open: 'never' }],
 		['json', { outputFile: 'test-results/results.json' }],
 		['junit', { outputFile: 'test-results/results.xml' }]
 	],

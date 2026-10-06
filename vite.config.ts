@@ -1,15 +1,21 @@
 import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+import adapter from '@sveltejs/adapter-netlify';
 import { defineConfig } from 'vite';
-import { performanceOptimizer } from './vite-plugins/performance-optimizer';
+import { performanceOptimizer } from './vite-plugins/performance-optimizer.ts';
 
 export default defineConfig({
 	plugins: [
 		tailwindcss(),
-		sveltekit(),
+		sveltekit({
+			// SvelteKit 3: project config now lives here instead of svelte.config.js
+			adapter: adapter(),
+			preprocess: vitePreprocess()
+		}),
 		performanceOptimizer({
 			bundleSizeLimit: 500 * 1024, // 500KB limit
-			chunkSizeLimit: 100 * 1024,  // 100KB per chunk
+			chunkSizeLimit: 100 * 1024, // 100KB per chunk
 			enableAnalysis: true,
 			enableOptimizations: true
 		})
@@ -23,8 +29,8 @@ export default defineConfig({
 		rollupOptions: {
 			output: {
 				// Optimize chunk naming for caching
-				chunkFileNames: 'chunks/[name]-[hash].js',
-				assetFileNames: 'assets/[name]-[hash].[ext]'
+				// (assetFileNames omitted: SvelteKit 3 overrides it)
+				chunkFileNames: 'chunks/[name]-[hash].js'
 			}
 		}
 	},
@@ -39,7 +45,6 @@ export default defineConfig({
 
 	// Dependency optimization
 	optimizeDeps: {
-		include: ['openai'],
 		exclude: ['@sveltejs/kit', 'svelte']
 	}
 });
