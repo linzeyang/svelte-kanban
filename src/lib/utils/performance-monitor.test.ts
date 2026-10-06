@@ -49,7 +49,7 @@ describe('Performance Monitor (Server)', () => {
 
 		test('should calculate statistics accurately', () => {
 			const values = [10, 20, 30, 40, 50];
-			values.forEach(value => {
+			values.forEach((value) => {
 				performanceMonitor.recordMetric('test-stats', value, 'interaction');
 			});
 
@@ -62,9 +62,13 @@ describe('Performance Monitor (Server)', () => {
 		});
 
 		test('should handle measure function', () => {
-			const result = performanceMonitor.measure('test-measure', () => {
-				return 'test-result';
-			}, 'interaction');
+			const result = performanceMonitor.measure(
+				'test-measure',
+				() => {
+					return 'test-result';
+				},
+				'interaction'
+			);
 
 			expect(result).toBe('test-result');
 
@@ -128,10 +132,14 @@ describe('Performance Monitor (Server)', () => {
 
 	describe('Async Operations', () => {
 		test('should handle async measure', async () => {
-			const result = await performanceMonitor.measureAsync('async-test', async () => {
-				await new Promise(resolve => setTimeout(resolve, 10));
-				return 'async-result';
-			}, 'interaction');
+			const result = await performanceMonitor.measureAsync(
+				'async-test',
+				async () => {
+					await new Promise((resolve) => setTimeout(resolve, 10));
+					return 'async-result';
+				},
+				'interaction'
+			);
 
 			expect(result).toBe('async-result');
 
@@ -143,9 +151,13 @@ describe('Performance Monitor (Server)', () => {
 
 		test('should handle async errors', async () => {
 			await expect(
-				performanceMonitor.measureAsync('async-error', async () => {
-					throw new Error('Test error');
-				}, 'interaction')
+				performanceMonitor.measureAsync(
+					'async-error',
+					async () => {
+						throw new Error('Test error');
+					},
+					'interaction'
+				)
 			).rejects.toThrow('Test error');
 
 			// Should still record the metric even on error

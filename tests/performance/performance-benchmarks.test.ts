@@ -27,13 +27,17 @@ describe('Performance Monitoring System', () => {
 	describe('Animation Performance', () => {
 		test('should track animation frame timing', async () => {
 			// Simulate animation frame measurement
-			performanceMonitor.measure('test-animation', () => {
-				// Simulate animation work
-				const start = performance.now();
-				while (performance.now() - start < 10) {
-					// Busy wait for 10ms
-				}
-			}, 'animation');
+			performanceMonitor.measure(
+				'test-animation',
+				() => {
+					// Simulate animation work
+					const start = performance.now();
+					while (performance.now() - start < 10) {
+						// Busy wait for 10ms
+					}
+				},
+				'animation'
+			);
 
 			const stats = performanceMonitor.getStats('test-animation');
 			expect(stats).toBeTruthy();
@@ -50,12 +54,16 @@ describe('Performance Monitoring System', () => {
 
 			// Measure under a name that has a registered threshold ('animation-frame' = 16.67ms);
 			// recordMetric only emits a violation when the metric name has a threshold.
-			performanceMonitor.measure('animation-frame', () => {
-				const start = performance.now();
-				while (performance.now() - start < 20) {
-					// Busy wait for 20ms (over the 60fps threshold)
-				}
-			}, 'animation');
+			performanceMonitor.measure(
+				'animation-frame',
+				() => {
+					const start = performance.now();
+					while (performance.now() - start < 20) {
+						// Busy wait for 20ms (over the 60fps threshold)
+					}
+				},
+				'animation'
+			);
 
 			window.removeEventListener('performance-violation', handler);
 
@@ -71,13 +79,17 @@ describe('Performance Monitoring System', () => {
 
 			// Simulate multiple animation frames
 			for (let i = 0; i < frameCount; i++) {
-				performanceMonitor.measure(`frame-${i}`, () => {
-					// Simulate frame work
-					const start = performance.now();
-					while (performance.now() - start < 8) {
-						// Busy wait for 8ms (well under 16.67ms)
-					}
-				}, 'animation');
+				performanceMonitor.measure(
+					`frame-${i}`,
+					() => {
+						// Simulate frame work
+						const start = performance.now();
+						while (performance.now() - start < 8) {
+							// Busy wait for 8ms (well under 16.67ms)
+						}
+					},
+					'animation'
+				);
 
 				const stats = performanceMonitor.getStats(`frame-${i}`);
 				if (stats) {
@@ -86,7 +98,7 @@ describe('Performance Monitoring System', () => {
 			}
 
 			// All frames should be under 16.67ms for 60fps
-			frameTimes.forEach(time => {
+			frameTimes.forEach((time) => {
 				expect(time).toBeLessThan(16.67);
 			});
 
@@ -98,13 +110,17 @@ describe('Performance Monitoring System', () => {
 	describe('Drag Operation Performance', () => {
 		test('should complete drag operations under 300ms', () => {
 			// Simulate drag operation
-			performanceMonitor.measure('drag-operation', () => {
-				// Simulate drag work
-				const start = performance.now();
-				while (performance.now() - start < 150) {
-					// Busy wait for 150ms (under 300ms threshold)
-				}
-			}, 'interaction');
+			performanceMonitor.measure(
+				'drag-operation',
+				() => {
+					// Simulate drag work
+					const start = performance.now();
+					while (performance.now() - start < 150) {
+						// Busy wait for 150ms (under 300ms threshold)
+					}
+				},
+				'interaction'
+			);
 
 			const stats = performanceMonitor.getStats('drag-operation');
 			expect(stats).toBeTruthy();
@@ -119,12 +135,16 @@ describe('Performance Monitoring System', () => {
 			});
 
 			// Simulate slow drag operation (over 300ms threshold)
-			performanceMonitor.measure('drag-operation', () => {
-				const start = performance.now();
-				while (performance.now() - start < 350) {
-					// Busy wait for 350ms (over threshold)
-				}
-			}, 'interaction');
+			performanceMonitor.measure(
+				'drag-operation',
+				() => {
+					const start = performance.now();
+					while (performance.now() - start < 350) {
+						// Busy wait for 350ms (over threshold)
+					}
+				},
+				'interaction'
+			);
 
 			expect(violations.length).toBeGreaterThan(0);
 			expect(violations[0].name).toBe('drag-operation');
@@ -202,7 +222,7 @@ describe('Performance Monitoring System', () => {
 
 			const leaks = memoryMonitor.detectMemoryLeaks();
 			expect(leaks.length).toBeGreaterThan(0);
-			expect(leaks.some(leak => leak.type === 'event-listener')).toBe(true);
+			expect(leaks.some((leak) => leak.type === 'event-listener')).toBe(true);
 		});
 
 		test('should cleanup tracked resources', () => {
@@ -255,7 +275,7 @@ describe('Performance Monitoring System', () => {
 
 			const recommendations = bundleAnalyzer.generateRecommendations();
 			expect(recommendations.length).toBeGreaterThan(0);
-			expect(recommendations.some(rec => rec.type === 'lazy-load')).toBe(true);
+			expect(recommendations.some((rec) => rec.type === 'lazy-load')).toBe(true);
 
 			document.body.removeChild(mockElement);
 		});
@@ -265,7 +285,7 @@ describe('Performance Monitoring System', () => {
 		test('should calculate accurate statistics', () => {
 			// Record multiple measurements
 			const measurements = [10, 20, 30, 40, 50];
-			measurements.forEach(value => {
+			measurements.forEach((value) => {
 				performanceMonitor.recordMetric('test-metric', value, 'interaction');
 			});
 
@@ -313,7 +333,11 @@ describe('Performance Monitoring System', () => {
 				return largeArray.length;
 			};
 
-			const result = performanceMonitor.measure('complex-operation', complexOperation, 'interaction');
+			const result = performanceMonitor.measure(
+				'complex-operation',
+				complexOperation,
+				'interaction'
+			);
 			expect(result).toBe(1000);
 
 			// Verify metrics were recorded
@@ -369,14 +393,18 @@ describe('Performance Benchmarks', () => {
 		const animationTimes: number[] = [];
 
 		for (let i = 0; i < iterations; i++) {
-			performanceMonitor.measure(`benchmark-animation-${i}`, () => {
-				// Simulate typical animation frame work
-				const element = document.createElement('div');
-				element.style.transform = `translateX(${i}px)`;
-				element.style.opacity = `${i / iterations}`;
-				document.body.appendChild(element);
-				document.body.removeChild(element);
-			}, 'animation');
+			performanceMonitor.measure(
+				`benchmark-animation-${i}`,
+				() => {
+					// Simulate typical animation frame work
+					const element = document.createElement('div');
+					element.style.transform = `translateX(${i}px)`;
+					element.style.opacity = `${i / iterations}`;
+					document.body.appendChild(element);
+					document.body.removeChild(element);
+				},
+				'animation'
+			);
 
 			const stats = performanceMonitor.getStats(`benchmark-animation-${i}`);
 			if (stats) {
@@ -405,22 +433,26 @@ describe('Performance Benchmarks', () => {
 		const dragTimes: number[] = [];
 
 		for (let i = 0; i < iterations; i++) {
-			performanceMonitor.measure(`benchmark-drag-${i}`, () => {
-				// Simulate drag operation
-				const element = document.createElement('div');
-				element.style.position = 'absolute';
-				element.style.left = '0px';
-				element.style.top = '0px';
-				document.body.appendChild(element);
+			performanceMonitor.measure(
+				`benchmark-drag-${i}`,
+				() => {
+					// Simulate drag operation
+					const element = document.createElement('div');
+					element.style.position = 'absolute';
+					element.style.left = '0px';
+					element.style.top = '0px';
+					document.body.appendChild(element);
 
-				// Simulate drag movement
-				for (let j = 0; j < 10; j++) {
-					element.style.left = `${j * 10}px`;
-					element.style.top = `${j * 5}px`;
-				}
+					// Simulate drag movement
+					for (let j = 0; j < 10; j++) {
+						element.style.left = `${j * 10}px`;
+						element.style.top = `${j * 5}px`;
+					}
 
-				document.body.removeChild(element);
-			}, 'interaction');
+					document.body.removeChild(element);
+				},
+				'interaction'
+			);
 
 			const stats = performanceMonitor.getStats(`benchmark-drag-${i}`);
 			if (stats) {
@@ -454,21 +486,25 @@ describe('Performance Benchmarks', () => {
 		const adaptationTimes: number[] = [];
 
 		for (const size of testSizes) {
-			performanceMonitor.measure(`layout-adaptation-${size.width}`, () => {
-				// Simulate viewport change effects
-				const container = document.createElement('div');
-				container.style.width = `${size.width}px`;
-				container.style.height = `${size.height}px`;
-				container.style.display = 'grid';
-				container.style.gridTemplateColumns = size.width > 768 ? '240px 1fr' : '1fr';
+			performanceMonitor.measure(
+				`layout-adaptation-${size.width}`,
+				() => {
+					// Simulate viewport change effects
+					const container = document.createElement('div');
+					container.style.width = `${size.width}px`;
+					container.style.height = `${size.height}px`;
+					container.style.display = 'grid';
+					container.style.gridTemplateColumns = size.width > 768 ? '240px 1fr' : '1fr';
 
-				document.body.appendChild(container);
+					document.body.appendChild(container);
 
-				// Force layout calculation
-				container.offsetHeight;
+					// Force layout calculation
+					container.offsetHeight;
 
-				document.body.removeChild(container);
-			}, 'layout');
+					document.body.removeChild(container);
+				},
+				'layout'
+			);
 
 			const stats = performanceMonitor.getStats(`layout-adaptation-${size.width}`);
 			if (stats) {

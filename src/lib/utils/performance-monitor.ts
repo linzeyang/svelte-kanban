@@ -70,7 +70,7 @@ class PerformanceMonitor {
 		}
 
 		// Disconnect observers
-		this.observers.forEach(observer => observer.disconnect());
+		this.observers.forEach((observer) => observer.disconnect());
 		this.observers.clear();
 
 		console.log('⏹️ Performance monitoring stopped');
@@ -79,7 +79,11 @@ class PerformanceMonitor {
 	/**
 	 * Measure performance of a specific operation
 	 */
-	measure<T>(name: string, operation: () => T, category: PerformanceMetric['category'] = 'interaction'): T {
+	measure<T>(
+		name: string,
+		operation: () => T,
+		category: PerformanceMetric['category'] = 'interaction'
+	): T {
 		const start = performance.now();
 
 		try {
@@ -87,7 +91,7 @@ class PerformanceMonitor {
 
 			// Handle async operations
 			if (result instanceof Promise) {
-				return result.then(asyncResult => {
+				return result.then((asyncResult) => {
 					this.recordMetric(name, performance.now() - start, category);
 					return asyncResult;
 				}) as T;
@@ -140,21 +144,27 @@ class PerformanceMonitor {
 		// Check threshold violations
 		const threshold = this.thresholds[name as keyof typeof this.thresholds];
 		if (threshold && value > threshold) {
-			console.warn(`⚠️ Performance threshold exceeded: ${name} took ${value.toFixed(2)}ms (threshold: ${threshold}ms)`);
+			console.warn(
+				`⚠️ Performance threshold exceeded: ${name} took ${value.toFixed(2)}ms (threshold: ${threshold}ms)`
+			);
 
 			// Emit custom event for monitoring
 			if (typeof window !== 'undefined') {
-				window.dispatchEvent(new CustomEvent('performance-violation', {
-					detail: { name, value, threshold, category }
-				}));
+				window.dispatchEvent(
+					new CustomEvent('performance-violation', {
+						detail: { name, value, threshold, category }
+					})
+				);
 			}
 		}
 
 		// Emit metric recorded event
 		if (typeof window !== 'undefined') {
-			window.dispatchEvent(new CustomEvent('performance-metric', {
-				detail: { name, value, category, timestamp: Date.now() }
-			}));
+			window.dispatchEvent(
+				new CustomEvent('performance-metric', {
+					detail: { name, value, category, timestamp: Date.now() }
+				})
+			);
 		}
 	}
 
@@ -175,7 +185,7 @@ class PerformanceMonitor {
 			max: sorted[sorted.length - 1],
 			count: measurements.length,
 			p95: sorted[Math.floor(sorted.length * 0.95)],
-			violations: threshold ? measurements.filter(val => val > threshold).length : 0
+			violations: threshold ? measurements.filter((val) => val > threshold).length : 0
 		};
 	}
 
@@ -284,8 +294,16 @@ class PerformanceMonitor {
 				for (const entry of list.getEntries()) {
 					if (entry.entryType === 'navigation') {
 						const navEntry = entry as PerformanceNavigationTiming;
-						this.recordMetric('bundle-load-time', navEntry.loadEventEnd - navEntry.fetchStart, 'bundle');
-						this.recordMetric('dom-content-loaded', navEntry.domContentLoadedEventEnd - navEntry.fetchStart, 'bundle');
+						this.recordMetric(
+							'bundle-load-time',
+							navEntry.loadEventEnd - navEntry.fetchStart,
+							'bundle'
+						);
+						this.recordMetric(
+							'dom-content-loaded',
+							navEntry.domContentLoadedEventEnd - navEntry.fetchStart,
+							'bundle'
+						);
 					}
 				}
 			});

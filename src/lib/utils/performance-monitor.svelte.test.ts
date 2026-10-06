@@ -36,14 +36,18 @@ describe('Performance Monitor (Browser)', () => {
 		});
 
 		test('should track performance metrics', () => {
-			const result = performanceMonitor.measure('browser-test', () => {
-				// Simulate some work
-				const start = performance.now();
-				while (performance.now() - start < 5) {
-					// Busy wait for 5ms
-				}
-				return 'done';
-			}, 'interaction');
+			const result = performanceMonitor.measure(
+				'browser-test',
+				() => {
+					// Simulate some work
+					const start = performance.now();
+					while (performance.now() - start < 5) {
+						// Busy wait for 5ms
+					}
+					return 'done';
+				},
+				'interaction'
+			);
 
 			expect(result).toBe('done');
 
@@ -62,11 +66,15 @@ describe('Performance Monitor (Browser)', () => {
 			element.innerHTML = 'Test content';
 			document.body.appendChild(element);
 
-			const result = performanceMonitor.measure('dom-test', () => {
-				element.style.transform = 'translateX(100px)';
-				element.offsetHeight; // Force reflow
-				return element.offsetWidth;
-			}, 'layout');
+			const result = performanceMonitor.measure(
+				'dom-test',
+				() => {
+					element.style.transform = 'translateX(100px)';
+					element.offsetHeight; // Force reflow
+					return element.offsetWidth;
+				},
+				'layout'
+			);
 
 			expect(result).toBeGreaterThan(0);
 
@@ -152,17 +160,21 @@ describe('Performance Monitor (Browser)', () => {
 			const times: number[] = [];
 
 			for (let i = 0; i < iterations; i++) {
-				performanceMonitor.measure(`animation-${i}`, () => {
-					// Do enough DOM work to be measurable above the ~0.1ms timer
-					// resolution; a single create/append/remove can round to 0ms and
-					// flake the `avgTime > 0` assertion.
-					for (let j = 0; j < 30; j++) {
-						const element = document.createElement('div');
-						element.style.transform = `translateX(${i + j}px)`;
-						document.body.appendChild(element);
-						document.body.removeChild(element);
-					}
-				}, 'animation');
+				performanceMonitor.measure(
+					`animation-${i}`,
+					() => {
+						// Do enough DOM work to be measurable above the ~0.1ms timer
+						// resolution; a single create/append/remove can round to 0ms and
+						// flake the `avgTime > 0` assertion.
+						for (let j = 0; j < 30; j++) {
+							const element = document.createElement('div');
+							element.style.transform = `translateX(${i + j}px)`;
+							document.body.appendChild(element);
+							document.body.removeChild(element);
+						}
+					},
+					'animation'
+				);
 
 				const stats = performanceMonitor.getStats(`animation-${i}`);
 				if (stats) {
@@ -190,23 +202,27 @@ describe('Performance Monitor (Browser)', () => {
 			const times: number[] = [];
 
 			for (let i = 0; i < iterations; i++) {
-				performanceMonitor.measure(`drag-${i}`, () => {
-					const element = document.createElement('div');
-					element.style.position = 'absolute';
-					document.body.appendChild(element);
+				performanceMonitor.measure(
+					`drag-${i}`,
+					() => {
+						const element = document.createElement('div');
+						element.style.position = 'absolute';
+						document.body.appendChild(element);
 
-					// Simulate drag movement. Reading offsetHeight after each write forces
-					// a synchronous layout, keeping the measurement above the ~0.1ms timer
-					// resolution (batched style writes alone can round to 0ms and flake
-					// the `avgTime > 0` assertion).
-					for (let j = 0; j < 50; j++) {
-						element.style.left = `${j * 10}px`;
-						element.style.top = `${j * 5}px`;
-						element.offsetHeight; // Force synchronous layout
-					}
+						// Simulate drag movement. Reading offsetHeight after each write forces
+						// a synchronous layout, keeping the measurement above the ~0.1ms timer
+						// resolution (batched style writes alone can round to 0ms and flake
+						// the `avgTime > 0` assertion).
+						for (let j = 0; j < 50; j++) {
+							element.style.left = `${j * 10}px`;
+							element.style.top = `${j * 5}px`;
+							element.offsetHeight; // Force synchronous layout
+						}
 
-					document.body.removeChild(element);
-				}, 'interaction');
+						document.body.removeChild(element);
+					},
+					'interaction'
+				);
 
 				const stats = performanceMonitor.getStats(`drag-${i}`);
 				if (stats) {
@@ -234,15 +250,19 @@ describe('Performance Monitor (Browser)', () => {
 			container.style.height = '100px';
 			document.body.appendChild(container);
 
-			performanceMonitor.measure('layout-test', () => {
-				// Perform enough forced reflows to be measurable above timer resolution
-				// (a single style write + reflow can round to 0ms and flake the >0 check).
-				for (let i = 0; i < 100; i++) {
-					container.style.width = `${200 + i}px`;
-					container.style.height = `${200 + i}px`;
-					container.offsetHeight; // Force synchronous layout
-				}
-			}, 'layout');
+			performanceMonitor.measure(
+				'layout-test',
+				() => {
+					// Perform enough forced reflows to be measurable above timer resolution
+					// (a single style write + reflow can round to 0ms and flake the >0 check).
+					for (let i = 0; i < 100; i++) {
+						container.style.width = `${200 + i}px`;
+						container.style.height = `${200 + i}px`;
+						container.offsetHeight; // Force synchronous layout
+					}
+				},
+				'layout'
+			);
 
 			const stats = performanceMonitor.getStats('layout-test');
 			expect(stats).toBeTruthy();

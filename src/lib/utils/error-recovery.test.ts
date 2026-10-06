@@ -133,10 +133,7 @@ describe('LayoutErrorRecovery', () => {
 			LayoutErrorRecovery.handleNavigationError(error);
 
 			expect(navigationStore.reset).toHaveBeenCalled();
-			expect(console.warn).toHaveBeenCalledWith(
-				'Navigation error, resetting to Kanban:',
-				error
-			);
+			expect(console.warn).toHaveBeenCalledWith('Navigation error, resetting to Kanban:', error);
 		});
 
 		test.skip('should handle reset failure with page reload', () => {
@@ -163,10 +160,7 @@ describe('LayoutErrorRecovery', () => {
 
 			expect(kanbanStore.clearError).toHaveBeenCalled();
 			expect(kanbanStore.loadFromStorage).toHaveBeenCalled();
-			expect(console.warn).toHaveBeenCalledWith(
-				'Kanban store error, attempting recovery:',
-				error
-			);
+			expect(console.warn).toHaveBeenCalledWith('Kanban store error, attempting recovery:', error);
 		});
 
 		test('should reset kanban store if recovery fails', () => {
@@ -209,14 +203,8 @@ describe('LayoutErrorRecovery', () => {
 
 			LayoutErrorRecovery.handleAnimationError(error);
 
-			expect(setPropertySpy).toHaveBeenCalledWith(
-				'--animation-duration',
-				'0ms'
-			);
-			expect(setPropertySpy).toHaveBeenCalledWith(
-				'--transition-duration',
-				'0ms'
-			);
+			expect(setPropertySpy).toHaveBeenCalledWith('--animation-duration', '0ms');
+			expect(setPropertySpy).toHaveBeenCalledWith('--transition-duration', '0ms');
 		});
 	});
 
@@ -235,7 +223,8 @@ describe('LayoutErrorRecovery', () => {
 			const error = new Error('Storage test error');
 
 			// Set up localStorage spy that throws
-			const removeItemSpy = vi.spyOn(globalThis.localStorage, 'removeItem')
+			const removeItemSpy = vi
+				.spyOn(globalThis.localStorage, 'removeItem')
 				.mockImplementation(() => {
 					throw new Error('Storage unavailable');
 				});
@@ -347,14 +336,8 @@ describe('initializeErrorRecovery', () => {
 
 		initializeErrorRecovery();
 
-		expect(addEventListenerSpy).toHaveBeenCalledWith(
-			'unhandledrejection',
-			expect.any(Function)
-		);
-		expect(addEventListenerSpy).toHaveBeenCalledWith(
-			'error',
-			expect.any(Function)
-		);
+		expect(addEventListenerSpy).toHaveBeenCalledWith('unhandledrejection', expect.any(Function));
+		expect(addEventListenerSpy).toHaveBeenCalledWith('error', expect.any(Function));
 		expect(consoleLogSpy).toHaveBeenCalledWith('Error recovery system initialized');
 	});
 
@@ -363,7 +346,8 @@ describe('initializeErrorRecovery', () => {
 
 		// Capture the event listener function
 		let rejectionHandler: (event: any) => void;
-		const addEventListenerSpy = vi.spyOn(window, 'addEventListener')
+		const addEventListenerSpy = vi
+			.spyOn(window, 'addEventListener')
 			.mockImplementation((type: string, handler: any) => {
 				if (type === 'unhandledrejection') {
 					rejectionHandler = handler;
@@ -380,10 +364,7 @@ describe('initializeErrorRecovery', () => {
 
 		rejectionHandler!(rejectionEvent);
 
-		expect(handleGenericSpy).toHaveBeenCalledWith(
-			expect.any(Error),
-			'promise'
-		);
+		expect(handleGenericSpy).toHaveBeenCalledWith(expect.any(Error), 'promise');
 	});
 
 	test('should handle global errors', () => {
@@ -391,7 +372,8 @@ describe('initializeErrorRecovery', () => {
 
 		// Capture the event listener function
 		let errorHandler: (event: any) => void;
-		const addEventListenerSpy = vi.spyOn(window, 'addEventListener')
+		const addEventListenerSpy = vi
+			.spyOn(window, 'addEventListener')
 			.mockImplementation((type: string, handler: any) => {
 				if (type === 'error') {
 					errorHandler = handler;
@@ -409,9 +391,6 @@ describe('initializeErrorRecovery', () => {
 
 		errorHandler!(errorEvent);
 
-		expect(handleGenericSpy).toHaveBeenCalledWith(
-			expect.any(Error),
-			'global'
-		);
+		expect(handleGenericSpy).toHaveBeenCalledWith(expect.any(Error), 'global');
 	});
 });

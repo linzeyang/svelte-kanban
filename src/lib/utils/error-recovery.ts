@@ -81,11 +81,17 @@ export class LayoutErrorRecovery {
 
 				// Remove animation-related classes
 				const animationClasses = [
-					'slide-in-left', 'slide-in-right', 'slide-in-up', 'slide-in-down',
-					'fade-in', 'column-entrance', 'sidebar-entrance', 'ai-pulse'
+					'slide-in-left',
+					'slide-in-right',
+					'slide-in-up',
+					'slide-in-down',
+					'fade-in',
+					'column-entrance',
+					'sidebar-entrance',
+					'ai-pulse'
 				];
 
-				animationClasses.forEach(className => {
+				animationClasses.forEach((className) => {
 					element.classList.remove(className);
 				});
 			}
@@ -137,7 +143,6 @@ export class LayoutErrorRecovery {
 			// Reset stores to clean state
 			kanbanStore.reset();
 			navigationStore.reset();
-
 		} catch (recoveryError) {
 			console.error('Failed to recover from storage error:', recoveryError);
 		}
@@ -210,7 +215,6 @@ export class LayoutErrorRecovery {
 			}
 
 			console.log('Full application reset completed');
-
 		} catch (resetError) {
 			console.error('Failed to perform full reset:', resetError);
 
@@ -257,10 +261,7 @@ export class LayoutErrorRecovery {
 			// Handle general errors
 			window.addEventListener('error', (event) => {
 				console.error('Global error:', event.error);
-				this.handleGenericError(
-					event.error || new Error(event.message),
-					'global'
-				);
+				this.handleGenericError(event.error || new Error(event.message), 'global');
 			});
 		}
 	}
@@ -274,10 +275,7 @@ export function useErrorRecovery(componentName: string) {
 
 	return {
 		handleError: (error: Error, context?: string) => {
-			return LayoutErrorRecovery.handleGenericError(
-				error,
-				context || componentName.toLowerCase()
-			);
+			return LayoutErrorRecovery.handleGenericError(error, context || componentName.toLowerCase());
 		},
 
 		onError: boundary.onError

@@ -78,7 +78,7 @@ A modern kanban application that combines traditional task management with AI-po
 - **Framework**: Svelte 5 / SvelteKit 2
 - **Style**: TailwindCSS 4
 - **Build**: Vite 7
-- **Linting / Formatting**: ESlint / Prettier
+- **Linting / Formatting**: Oxlint / Oxfmt
 - **Testing**: Vitest (unit and component), Playwright (E2E tests)
 - **AI Integration**: OpenAI Javascript SDK (supports OpenAI-compatible services)
 

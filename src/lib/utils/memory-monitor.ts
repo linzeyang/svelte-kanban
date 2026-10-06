@@ -174,7 +174,7 @@ class MemoryMonitor {
 
 		// Check for excessive event listeners
 		let totalListeners = 0;
-		this.eventListeners.forEach(listeners => {
+		this.eventListeners.forEach((listeners) => {
 			totalListeners += listeners.size;
 		});
 
@@ -224,7 +224,7 @@ class MemoryMonitor {
 	 */
 	cleanup(): void {
 		// Run all cleanup tasks
-		this.cleanupTasks.forEach(cleanup => {
+		this.cleanupTasks.forEach((cleanup) => {
 			try {
 				cleanup();
 			} catch (error) {
@@ -279,9 +279,11 @@ class MemoryMonitor {
 			}
 
 			// Emit memory event
-			window.dispatchEvent(new CustomEvent('memory-update', {
-				detail: metrics
-			}));
+			window.dispatchEvent(
+				new CustomEvent('memory-update', {
+					detail: metrics
+				})
+			);
 		}, 5000); // Check every 5 seconds
 
 		this.trackTimer(this.monitorInterval);
@@ -299,9 +301,11 @@ class MemoryMonitor {
 				console.warn('🕳️ Potential memory leaks detected:', leaks);
 
 				// Emit leak detection event
-				window.dispatchEvent(new CustomEvent('memory-leaks-detected', {
-					detail: leaks
-				}));
+				window.dispatchEvent(
+					new CustomEvent('memory-leaks-detected', {
+						detail: leaks
+					})
+				);
 			}
 		}, 30000);
 
@@ -345,9 +349,11 @@ class MemoryMonitor {
 		performanceMonitor.clearData();
 
 		// Emit memory pressure event for components to react
-		window.dispatchEvent(new CustomEvent('memory-pressure', {
-			detail: { severity: 'high' }
-		}));
+		window.dispatchEvent(
+			new CustomEvent('memory-pressure', {
+				detail: { severity: 'high' }
+			})
+		);
 	}
 
 	/**
@@ -374,8 +380,10 @@ class MemoryMonitor {
 				cleanupTasks: this.cleanupTasks.size,
 				observers: this.observers.size,
 				timers: this.timers.size,
-				eventListeners: Array.from(this.eventListeners.values())
-					.reduce((sum, listeners) => sum + listeners.size, 0)
+				eventListeners: Array.from(this.eventListeners.values()).reduce(
+					(sum, listeners) => sum + listeners.size,
+					0
+				)
 			}
 		};
 	}

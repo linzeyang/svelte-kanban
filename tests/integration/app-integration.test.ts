@@ -112,9 +112,7 @@ test.describe('AI-Native Kanban Application Integration', () => {
 		// Wait for column entrance animations to finish so positions are stable
 		await page.waitForFunction(
 			() => {
-				const wrappers = Array.from(
-					document.querySelectorAll('[data-testid^="column-wrapper-"]')
-				);
+				const wrappers = Array.from(document.querySelectorAll('[data-testid^="column-wrapper-"]'));
 				return (
 					wrappers.length === 4 &&
 					wrappers.every((wrapper) => {

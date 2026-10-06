@@ -260,11 +260,13 @@ class KanbanStore {
 					// Validate data structure and version
 					if (data.version === 1 && Array.isArray(data.tasks)) {
 						// Convert date strings back to Date objects
-						this.tasks = data.tasks.map((task: TaskItem & { createdAt: string; updatedAt: string }) => ({
-							...task,
-							createdAt: new Date(task.createdAt),
-							updatedAt: new Date(task.updatedAt)
-						}));
+						this.tasks = data.tasks.map(
+							(task: TaskItem & { createdAt: string; updatedAt: string }) => ({
+								...task,
+								createdAt: new Date(task.createdAt),
+								updatedAt: new Date(task.updatedAt)
+							})
+						);
 					}
 				}
 			} catch (error) {
@@ -298,11 +300,13 @@ class KanbanStore {
 				this.clearError();
 
 				// Import tasks with proper date conversion
-				const importedTasks = data.board.tasks.map((task: TaskItem & { createdAt: string; updatedAt: string }) => ({
-					...task,
-					createdAt: new Date(task.createdAt),
-					updatedAt: new Date(task.updatedAt)
-				}));
+				const importedTasks = data.board.tasks.map(
+					(task: TaskItem & { createdAt: string; updatedAt: string }) => ({
+						...task,
+						createdAt: new Date(task.createdAt),
+						updatedAt: new Date(task.updatedAt)
+					})
+				);
 
 				this.tasks = importedTasks;
 				this.saveToStorage();

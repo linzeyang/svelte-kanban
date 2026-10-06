@@ -81,7 +81,9 @@ export function performanceOptimizer(options: PerformanceOptimizerOptions = {}):
 
 			// Check total bundle size
 			if (totalSize > bundleSizeLimit) {
-				console.warn(`⚠️ Bundle size exceeds limit: ${(totalSize / 1024).toFixed(2)}KB (limit: ${(bundleSizeLimit / 1024).toFixed(2)}KB)`);
+				console.warn(
+					`⚠️ Bundle size exceeds limit: ${(totalSize / 1024).toFixed(2)}KB (limit: ${(bundleSizeLimit / 1024).toFixed(2)}KB)`
+				);
 			}
 
 			// Store bundle statistics
@@ -98,7 +100,7 @@ export function performanceOptimizer(options: PerformanceOptimizerOptions = {}):
 			const recommendations = generateOptimizationRecommendations(chunks);
 			if (recommendations.length > 0) {
 				console.log('\n📦 Bundle Optimization Recommendations:');
-				recommendations.forEach(rec => {
+				recommendations.forEach((rec) => {
 					console.log(`  ${rec.type}: ${rec.description}`);
 				});
 			}
@@ -210,7 +212,7 @@ function generateOptimizationRecommendations(chunks: ChunkInfo[]): Array<{
 	}> = [];
 
 	// Check for large chunks
-	const largeChunks = chunks.filter(chunk => (chunk as ChunkInfo).size > 100 * 1024);
+	const largeChunks = chunks.filter((chunk) => (chunk as ChunkInfo).size > 100 * 1024);
 	if (largeChunks.length > 0) {
 		recommendations.push({
 			type: 'Code Splitting',
@@ -220,11 +222,14 @@ function generateOptimizationRecommendations(chunks: ChunkInfo[]): Array<{
 	}
 
 	// Check for duplicate modules
-	const allModules = chunks.flatMap(chunk => (chunk as ChunkInfo).modules || []);
-	const moduleCount = allModules.reduce((acc, module) => {
-		acc[module] = (acc[module] || 0) + 1;
-		return acc;
-	}, {} as Record<string, number>);
+	const allModules = chunks.flatMap((chunk) => (chunk as ChunkInfo).modules || []);
+	const moduleCount = allModules.reduce(
+		(acc, module) => {
+			acc[module] = (acc[module] || 0) + 1;
+			return acc;
+		},
+		{} as Record<string, number>
+	);
 
 	const duplicateModules = Object.entries(moduleCount).filter(([, count]) => (count as number) > 1);
 	if (duplicateModules.length > 0) {
@@ -236,7 +241,7 @@ function generateOptimizationRecommendations(chunks: ChunkInfo[]): Array<{
 	}
 
 	// Check compression ratio
-	chunks.forEach(chunk => {
+	chunks.forEach((chunk) => {
 		const compressionRatio = chunk.gzippedSize / chunk.size;
 		if (compressionRatio > 0.8) {
 			recommendations.push({
@@ -248,7 +253,7 @@ function generateOptimizationRecommendations(chunks: ChunkInfo[]): Array<{
 	});
 
 	// Check for unused entry points
-	const entryChunks = chunks.filter(chunk => chunk.isEntry);
+	const entryChunks = chunks.filter((chunk) => chunk.isEntry);
 	if (entryChunks.length > 3) {
 		recommendations.push({
 			type: 'Entry Points',

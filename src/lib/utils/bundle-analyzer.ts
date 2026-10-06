@@ -128,8 +128,9 @@ class BundleAnalyzer {
 
 		// Analyze overall tree structure
 		const totalComponents = this.componentRegistry.size;
-		const avgDepth = Array.from(this.componentRegistry.values())
-			.reduce((sum, comp) => sum + comp.depth, 0) / totalComponents;
+		const avgDepth =
+			Array.from(this.componentRegistry.values()).reduce((sum, comp) => sum + comp.depth, 0) /
+			totalComponents;
 
 		performanceMonitor.recordMetric('component-tree-size', totalComponents, 'bundle');
 		performanceMonitor.recordMetric('component-tree-depth', avgDepth, 'bundle');
@@ -149,7 +150,7 @@ class BundleAnalyzer {
 			{ name: 'openai', usage: 'important' as const, estimatedSize: 200 * 1024 }
 		];
 
-		knownDependencies.forEach(dep => {
+		knownDependencies.forEach((dep) => {
 			const metrics: DependencyMetrics = {
 				name: dep.name,
 				size: dep.estimatedSize,
@@ -161,7 +162,9 @@ class BundleAnalyzer {
 			this.dependencyRegistry.set(dep.name, metrics);
 
 			if (dep.estimatedSize > this.thresholds.dependency) {
-				console.warn(`📦 Large dependency: ${dep.name} (${(dep.estimatedSize / 1024).toFixed(2)}KB)`);
+				console.warn(
+					`📦 Large dependency: ${dep.name} (${(dep.estimatedSize / 1024).toFixed(2)}KB)`
+				);
 			}
 		});
 	}
@@ -196,7 +199,7 @@ class BundleAnalyzer {
 		const attributesCount = element.attributes.length;
 
 		// Estimate: base HTML + children complexity + attributes
-		return htmlSize + (childrenCount * 100) + (attributesCount * 50);
+		return htmlSize + childrenCount * 100 + attributesCount * 50;
 	}
 
 	/**
@@ -208,7 +211,7 @@ class BundleAnalyzer {
 		const eventListeners = this.countEventListeners(element);
 
 		// Estimate: nodes * base memory + listeners * listener memory
-		return (nodeCount * 1000) + (eventListeners * 500);
+		return nodeCount * 1000 + eventListeners * 500;
 	}
 
 	/**
@@ -216,7 +219,9 @@ class BundleAnalyzer {
 	 */
 	private countEventListeners(element: HTMLElement): number {
 		// This is a rough approximation
-		const interactiveElements = element.querySelectorAll('button, input, select, textarea, [onclick], [onchange]');
+		const interactiveElements = element.querySelectorAll(
+			'button, input, select, textarea, [onclick], [onchange]'
+		);
 		return interactiveElements.length;
 	}
 
@@ -290,10 +295,9 @@ class BundleAnalyzer {
 	 * Get bundle metrics summary
 	 */
 	getBundleMetrics(): BundleMetrics {
-		const totalSize = Array.from(this.componentRegistry.values())
-			.reduce((sum, comp) => sum + comp.size, 0) +
-			Array.from(this.dependencyRegistry.values())
-			.reduce((sum, dep) => sum + dep.size, 0);
+		const totalSize =
+			Array.from(this.componentRegistry.values()).reduce((sum, comp) => sum + comp.size, 0) +
+			Array.from(this.dependencyRegistry.values()).reduce((sum, dep) => sum + dep.size, 0);
 
 		return {
 			totalSize,

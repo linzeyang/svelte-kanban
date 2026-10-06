@@ -138,9 +138,9 @@
 	<!-- Toggle Button -->
 	<button
 		onclick={() => (isVisible = !isVisible)}
-		class="fixed bottom-4 right-4 z-50 rounded-full bg-neon-purple/20 p-3
-		       text-neon-purple backdrop-blur-sm border border-neon-purple/30
-		       hover:bg-neon-purple/30 transition-all duration-200"
+		class="fixed right-4 bottom-4 z-50 rounded-full border border-neon-purple/30
+		       bg-neon-purple/20 p-3 text-neon-purple backdrop-blur-sm
+		       transition-all duration-200 hover:bg-neon-purple/30"
 		title="Performance Dashboard (Ctrl+Shift+P)"
 	>
 		📊
@@ -158,8 +158,8 @@
 			onkeydown={(e) => e.key === 'Escape' && (isVisible = false)}
 		>
 			<div
-				class="glass-effect w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-lg
-				       border border-neon-blue/30 shadow-2xl"
+				class="max-h-[90vh] w-full max-w-6xl overflow-hidden rounded-lg border
+				       border-neon-blue/30 shadow-2xl glass-effect"
 			>
 				<!-- Header -->
 				<div class="flex items-center justify-between border-b border-neon-blue/20 p-4">
@@ -168,13 +168,13 @@
 						<button
 							onclick={exportData}
 							class="rounded bg-neon-blue/20 px-3 py-1 text-sm text-neon-blue
-							       hover:bg-neon-blue/30 transition-colors"
+							       transition-colors hover:bg-neon-blue/30"
 						>
 							Export Data
 						</button>
 						<button
 							onclick={() => (isVisible = false)}
-							class="text-text-muted hover:text-text-primary transition-colors"
+							class="text-text-muted transition-colors hover:text-text-primary"
 						>
 							✕
 						</button>
@@ -202,8 +202,8 @@
 						<div class="space-y-4">
 							<!-- Performance Violations -->
 							{#if violations.length > 0}
-								<div class="rounded-lg bg-red-500/10 border border-red-500/20 p-4">
-									<div class="flex items-center justify-between mb-2">
+								<div class="rounded-lg border border-red-500/20 bg-red-500/10 p-4">
+									<div class="mb-2 flex items-center justify-between">
 										<h3 class="font-medium text-red-400">Performance Violations</h3>
 										<button
 											onclick={clearViolations}
@@ -212,7 +212,7 @@
 											Clear
 										</button>
 									</div>
-									<div class="space-y-2 max-h-32 overflow-y-auto">
+									<div class="max-h-32 space-y-2 overflow-y-auto">
 										{#each violations as violation}
 											<div class="text-sm text-red-300">
 												<span class="font-mono">{violation.name}</span>:
@@ -224,10 +224,10 @@
 							{/if}
 
 							<!-- Performance Metrics -->
-							<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+							<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 								{#each Object.entries(performanceStats) as [name, stats]}
-									<div class="rounded-lg bg-bg-card border border-neon-blue/20 p-4">
-										<h4 class="font-medium text-text-primary mb-2">{name}</h4>
+									<div class="rounded-lg border border-neon-blue/20 bg-bg-card p-4">
+										<h4 class="mb-2 font-medium text-text-primary">{name}</h4>
 										<div class="space-y-1 text-sm">
 											<div class="flex justify-between">
 												<span class="text-text-muted">Average:</span>
@@ -266,9 +266,9 @@
 						<div class="space-y-4">
 							{#if memoryMetrics}
 								<!-- Memory Overview -->
-								<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-									<div class="rounded-lg bg-bg-card border border-neon-blue/20 p-4">
-										<h4 class="font-medium text-text-primary mb-2">Memory Usage</h4>
+								<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+									<div class="rounded-lg border border-neon-blue/20 bg-bg-card p-4">
+										<h4 class="mb-2 font-medium text-text-primary">Memory Usage</h4>
 										<div class="space-y-2">
 											<div class="flex justify-between text-sm">
 												<span class="text-text-muted">Used:</span>
@@ -310,10 +310,9 @@
 
 										<!-- Memory Usage Bar -->
 										<div class="mt-4">
-											<div class="h-2 bg-bg-secondary rounded-full overflow-hidden">
+											<div class="h-2 overflow-hidden rounded-full bg-bg-secondary">
 												<div
-													class="h-full transition-all duration-300 {memoryMetrics.percentage >
-													0.9
+													class="h-full transition-all duration-300 {memoryMetrics.percentage > 0.9
 														? 'bg-red-500'
 														: memoryMetrics.percentage > 0.7
 															? 'bg-yellow-500'
@@ -325,18 +324,18 @@
 									</div>
 
 									<!-- Memory Leaks -->
-									<div class="rounded-lg bg-bg-card border border-neon-blue/20 p-4">
-										<h4 class="font-medium text-text-primary mb-2">Memory Leaks</h4>
+									<div class="rounded-lg border border-neon-blue/20 bg-bg-card p-4">
+										<h4 class="mb-2 font-medium text-text-primary">Memory Leaks</h4>
 										{#await memoryMonitor.detectMemoryLeaks()}
 											<div class="text-sm text-text-muted">Checking...</div>
 										{:then leaks}
 											{#if leaks.length === 0}
 												<div class="text-sm text-green-400">No leaks detected</div>
 											{:else}
-												<div class="space-y-2 max-h-32 overflow-y-auto">
+												<div class="max-h-32 space-y-2 overflow-y-auto">
 													{#each leaks as leak}
 														<div
-															class="text-sm p-2 rounded border {leak.severity === 'high'
+															class="rounded border p-2 text-sm {leak.severity === 'high'
 																? 'border-red-500/20 bg-red-500/10 text-red-300'
 																: leak.severity === 'medium'
 																	? 'border-yellow-500/20 bg-yellow-500/10 text-yellow-300'
@@ -352,7 +351,7 @@
 									</div>
 								</div>
 							{:else}
-								<div class="text-center text-text-muted py-8">
+								<div class="py-8 text-center text-text-muted">
 									Memory monitoring not supported in this browser
 								</div>
 							{/if}
@@ -361,9 +360,9 @@
 						<div class="space-y-4">
 							{#if bundleMetrics}
 								<!-- Bundle Overview -->
-								<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-									<div class="rounded-lg bg-bg-card border border-neon-blue/20 p-4">
-										<h4 class="font-medium text-text-primary mb-2">Bundle Size</h4>
+								<div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+									<div class="rounded-lg border border-neon-blue/20 bg-bg-card p-4">
+										<h4 class="mb-2 font-medium text-text-primary">Bundle Size</h4>
 										<div class="space-y-1 text-sm">
 											<div class="flex justify-between">
 												<span class="text-text-muted">Total:</span>
@@ -380,16 +379,16 @@
 										</div>
 									</div>
 
-									<div class="rounded-lg bg-bg-card border border-neon-blue/20 p-4">
-										<h4 class="font-medium text-text-primary mb-2">Components</h4>
+									<div class="rounded-lg border border-neon-blue/20 bg-bg-card p-4">
+										<h4 class="mb-2 font-medium text-text-primary">Components</h4>
 										<div class="text-2xl font-bold text-neon-blue">
 											{bundleMetrics.components.length}
 										</div>
 										<div class="text-sm text-text-muted">Total components</div>
 									</div>
 
-									<div class="rounded-lg bg-bg-card border border-neon-blue/20 p-4">
-										<h4 class="font-medium text-text-primary mb-2">Dependencies</h4>
+									<div class="rounded-lg border border-neon-blue/20 bg-bg-card p-4">
+										<h4 class="mb-2 font-medium text-text-primary">Dependencies</h4>
 										<div class="text-2xl font-bold text-neon-purple">
 											{bundleMetrics.dependencies.length}
 										</div>
@@ -399,24 +398,24 @@
 
 								<!-- Optimization Recommendations -->
 								{#if bundleMetrics.recommendations.length > 0}
-									<div class="rounded-lg bg-bg-card border border-neon-blue/20 p-4">
-										<h4 class="font-medium text-text-primary mb-2">Optimization Recommendations</h4>
-										<div class="space-y-2 max-h-48 overflow-y-auto">
+									<div class="rounded-lg border border-neon-blue/20 bg-bg-card p-4">
+										<h4 class="mb-2 font-medium text-text-primary">Optimization Recommendations</h4>
+										<div class="max-h-48 space-y-2 overflow-y-auto">
 											{#each bundleMetrics.recommendations as rec}
 												<div
-													class="p-3 rounded border {rec.impact === 'high'
+													class="rounded border p-3 {rec.impact === 'high'
 														? 'border-red-500/20 bg-red-500/10'
 														: rec.impact === 'medium'
 															? 'border-yellow-500/20 bg-yellow-500/10'
 															: 'border-blue-500/20 bg-blue-500/10'}"
 												>
-													<div class="flex items-center justify-between mb-1">
-														<span class="font-medium text-sm">{rec.type}</span>
-														<span class="text-xs px-2 py-1 rounded bg-black/20">
+													<div class="mb-1 flex items-center justify-between">
+														<span class="text-sm font-medium">{rec.type}</span>
+														<span class="rounded bg-black/20 px-2 py-1 text-xs">
 															{rec.impact} impact
 														</span>
 													</div>
-													<div class="text-sm opacity-80 mb-1">{rec.description}</div>
+													<div class="mb-1 text-sm opacity-80">{rec.description}</div>
 													<div class="text-xs text-text-muted">
 														Estimated savings: {formatBytes(rec.estimatedSavings)}
 													</div>
@@ -426,38 +425,38 @@
 									</div>
 								{/if}
 							{:else}
-								<div class="text-center text-text-muted py-8">Loading bundle metrics...</div>
+								<div class="py-8 text-center text-text-muted">Loading bundle metrics...</div>
 							{/if}
 						</div>
 					{:else if activeTab === 'responsive'}
 						<div class="space-y-4">
 							<!-- Viewport Info -->
 							{#await responsiveMonitor.getViewportInfo()}
-								<div class="text-center text-text-muted py-8">Loading viewport info...</div>
+								<div class="py-8 text-center text-text-muted">Loading viewport info...</div>
 							{:then viewport}
-								<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-									<div class="rounded-lg bg-bg-card border border-neon-blue/20 p-4">
-										<h4 class="font-medium text-text-primary mb-2">Viewport</h4>
+								<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+									<div class="rounded-lg border border-neon-blue/20 bg-bg-card p-4">
+										<h4 class="mb-2 font-medium text-text-primary">Viewport</h4>
 										<div class="text-lg font-bold text-neon-blue">
 											{viewport.width} × {viewport.height}
 										</div>
 										<div class="text-sm text-text-muted">{viewport.orientation}</div>
 									</div>
 
-									<div class="rounded-lg bg-bg-card border border-neon-blue/20 p-4">
-										<h4 class="font-medium text-text-primary mb-2">Breakpoint</h4>
+									<div class="rounded-lg border border-neon-blue/20 bg-bg-card p-4">
+										<h4 class="mb-2 font-medium text-text-primary">Breakpoint</h4>
 										<div class="text-lg font-bold text-neon-purple">{viewport.breakpoint}</div>
 										<div class="text-sm text-text-muted">Current breakpoint</div>
 									</div>
 
-									<div class="rounded-lg bg-bg-card border border-neon-blue/20 p-4">
-										<h4 class="font-medium text-text-primary mb-2">Device Pixel Ratio</h4>
+									<div class="rounded-lg border border-neon-blue/20 bg-bg-card p-4">
+										<h4 class="mb-2 font-medium text-text-primary">Device Pixel Ratio</h4>
 										<div class="text-lg font-bold text-neon-green">{viewport.devicePixelRatio}</div>
 										<div class="text-sm text-text-muted">Screen density</div>
 									</div>
 
-									<div class="rounded-lg bg-bg-card border border-neon-blue/20 p-4">
-										<h4 class="font-medium text-text-primary mb-2">Layout Performance</h4>
+									<div class="rounded-lg border border-neon-blue/20 bg-bg-card p-4">
+										<h4 class="mb-2 font-medium text-text-primary">Layout Performance</h4>
 										{#if performanceStats['responsive-layout']}
 											<div class="text-lg font-bold text-neon-cyan">
 												{formatTime(performanceStats['responsive-layout'].avg)}
@@ -471,9 +470,9 @@
 							{/await}
 
 							<!-- Responsive Performance Metrics -->
-							<div class="rounded-lg bg-bg-card border border-neon-blue/20 p-4">
-								<h4 class="font-medium text-text-primary mb-2">Responsive Performance</h4>
-								<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<div class="rounded-lg border border-neon-blue/20 bg-bg-card p-4">
+								<h4 class="mb-2 font-medium text-text-primary">Responsive Performance</h4>
+								<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 									{#each Object.entries(performanceStats).filter(([name]) => name.includes('layout') || name.includes('responsive') || name.includes('container')) as [name, stats]}
 										<div class="space-y-1">
 											<div class="text-sm font-medium text-text-primary">{name}</div>

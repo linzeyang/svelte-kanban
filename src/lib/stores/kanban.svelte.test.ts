@@ -133,9 +133,7 @@ describe('KanbanStore', () => {
 				}
 			];
 
-			mockUUID
-				.mockReturnValueOnce('uuid-1')
-				.mockReturnValueOnce('uuid-2');
+			mockUUID.mockReturnValueOnce('uuid-1').mockReturnValueOnce('uuid-2');
 
 			const addedTasks = kanbanStore.addTasks(tasksData);
 
@@ -168,7 +166,7 @@ describe('KanbanStore', () => {
 			});
 
 			expect(success).toBe(true);
-			const updatedTask = kanbanStore.allTasks.find(t => t.id === task.id);
+			const updatedTask = kanbanStore.allTasks.find((t) => t.id === task.id);
 			expect(updatedTask?.title).toBe('Updated Title');
 			expect(updatedTask?.priority).toBe('high');
 			expect(updatedTask?.description).toBe('Original Description'); // Should remain unchanged
@@ -247,7 +245,7 @@ describe('KanbanStore', () => {
 			expect(kanbanStore.todoCount).toBe(0);
 			expect(kanbanStore.inProgressCount).toBe(1);
 
-			const movedTask = kanbanStore.allTasks.find(t => t.id === task.id);
+			const movedTask = kanbanStore.allTasks.find((t) => t.id === task.id);
 			expect(movedTask?.status).toBe('in-progress');
 			expect(movedTask?.updatedAt.getTime()).toBeGreaterThan(originalUpdatedAt.getTime());
 
@@ -320,10 +318,10 @@ describe('KanbanStore', () => {
 			expect(kanbanStore.testingTasks).toHaveLength(1);
 			expect(kanbanStore.doneTasks).toHaveLength(2);
 
-			expect(kanbanStore.todoTasks.every(task => task.status === 'todo')).toBe(true);
-			expect(kanbanStore.inProgressTasks.every(task => task.status === 'in-progress')).toBe(true);
-			expect(kanbanStore.testingTasks.every(task => task.status === 'testing')).toBe(true);
-			expect(kanbanStore.doneTasks.every(task => task.status === 'done')).toBe(true);
+			expect(kanbanStore.todoTasks.every((task) => task.status === 'todo')).toBe(true);
+			expect(kanbanStore.inProgressTasks.every((task) => task.status === 'in-progress')).toBe(true);
+			expect(kanbanStore.testingTasks.every((task) => task.status === 'testing')).toBe(true);
+			expect(kanbanStore.doneTasks.every((task) => task.status === 'done')).toBe(true);
 		});
 
 		test('should update derived values when tasks change', () => {
@@ -362,8 +360,8 @@ describe('KanbanStore', () => {
 			expect(boardData.tasks).toHaveLength(2);
 
 			// Check that columns have correct tasks
-			const todoColumn = boardData.columns.find(col => col.id === 'todo');
-			const doneColumn = boardData.columns.find(col => col.id === 'done');
+			const todoColumn = boardData.columns.find((col) => col.id === 'todo');
+			const doneColumn = boardData.columns.find((col) => col.id === 'done');
 
 			expect(todoColumn?.tasks).toHaveLength(1);
 			expect(doneColumn?.tasks).toHaveLength(1);

@@ -129,7 +129,9 @@ class ResponsiveMonitor {
 
 				// Log viewport info for context
 				const viewport = this.getViewportInfo();
-				console.log(`📐 Layout adapted in ${duration.toFixed(2)}ms for ${viewport.breakpoint} (${viewport.width}x${viewport.height})`);
+				console.log(
+					`📐 Layout adapted in ${duration.toFixed(2)}ms for ${viewport.breakpoint} (${viewport.width}x${viewport.height})`
+				);
 			});
 		});
 	}
@@ -175,7 +177,7 @@ class ResponsiveMonitor {
 
 		// Observe main layout containers
 		const mainContainers = document.querySelectorAll('main, .app-shell, .kanban-board');
-		mainContainers.forEach(container => {
+		mainContainers.forEach((container) => {
 			this.resizeObserver?.observe(container);
 		});
 	}
@@ -207,9 +209,11 @@ class ResponsiveMonitor {
 				performanceMonitor.recordMetric('viewport-change', duration, 'layout');
 
 				// Emit viewport change event
-				window.dispatchEvent(new CustomEvent('viewport-changed', {
-					detail: { viewport, adaptationTime: duration }
-				}));
+				window.dispatchEvent(
+					new CustomEvent('viewport-changed', {
+						detail: { viewport, adaptationTime: duration }
+					})
+				);
 			}, 100);
 		};
 
