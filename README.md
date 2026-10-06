@@ -28,8 +28,7 @@ A modern kanban application that combines traditional task management with AI-po
 ### Prerequisites
 
 - Node.js 20 or higher
-- npm (comes with Node.js)
-- bun
+- pnpm
 - An OpenAI API key (or a key from an OpenAI-compatible API service)
 
 ### Installation & Setup
@@ -38,7 +37,7 @@ A modern kanban application that combines traditional task management with AI-po
 
    ```bash
    # Install dependencies
-   bun install
+   pnpm install
    ```
 
 2. **Configure your AI service:**
@@ -60,7 +59,7 @@ A modern kanban application that combines traditional task management with AI-po
 
    ```bash
    # Start dev server
-   bun run dev
+   pnpm run dev
    ```
 
 4. **Access the application:**
@@ -99,10 +98,10 @@ A modern kanban application that combines traditional task management with AI-po
 
 ```bash
 # Linting:
-bun run lint
+pnpm run lint
 
 # Formatting:
-bun run format
+pnpm run format
 ```
 
 ### Running Tests
@@ -111,23 +110,23 @@ The project includes comprehensive test coverage:
 
 ```bash
 # Run all tests
-bun run test
+pnpm run test
 
 # unit / component tests
-bun run test:unit
+pnpm run test:unit
 
 # End-to-end tests
-bun run test:e2e
+pnpm run test:e2e
 ```
 
 ### Development Commands
 
 ```bash
 # development server with auto-reload
-bun run dev
+pnpm run dev
 
 # Build for production
-bun run build
+pnpm run build
 ```
 
 ### Deployment
